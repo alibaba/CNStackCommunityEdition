@@ -66,7 +66,8 @@ sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m 192.
 * 搜索`VG_DEV=#DataDiskDeviceName#`，替换`#DataDiskDeviceName#`，例如：`VG_DEV=/dev/vdb`
   * `#DataDiskDeviceName#` 是你数据盘的设备名，可以通过 `lsblk -p` 查看
   * 如果是多节点，需要所有节点都有同名的数据盘设备
-* 完成上述修改后，Clusterfile中默认开启了监控、日志以及弹性伸缩功能。
+* 完成上述修改后，Clusterfile中默认开启了监控、日志以及弹性伸缩功能
+  * （可选）运行 `cat Clusterfile | grep -n -e MASTER -e WORKER -e DataDiskDeviceName -e PASSWD` 确定Clusterfile是否完成了替换
 
 执行：
 
