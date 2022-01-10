@@ -22,6 +22,12 @@ CNStack社区版（CNStack Community Edition, CNStack CE）是[阿里云云原�
 
 单节点，一键部署
 
+环境要求：
+
+* 规格：推荐8C12GB
+* 磁盘：根目录50GB以上可用磁盘空间
+* OS：CentOS 7.8或者以上，推荐CentOS 7.8
+
 ```bash
 # 获取sealer工具
 wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
