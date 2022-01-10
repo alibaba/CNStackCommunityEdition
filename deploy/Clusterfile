@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: my-cluster
 spec:
-  image: registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:a0ff3c_mvp
+  image: registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0
   provider: BAREMETAL
   ssh:
     # SSH login password, if you use the key to log in, you don’t need to set it
