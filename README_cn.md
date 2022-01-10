@@ -16,25 +16,75 @@ CNStack社区版（CNStack Community Edition, CNStack CE）是[阿里云云原�
 * 迭代快速：版本节奏更快，更灵活，可以快速体验新功能
 * 兼容适配：通过网络插件[hybridnet](https://github.com/alibaba/hybridnet)和本地存储插件[open-local](https://github.com/alibaba/open-local)，最大限度适配多种基础设施。
 
-## 快速开始
+## 产品部署
 
-单节点，一键部署最小功能集
+### 最小功能集，一键部署
+
+单节点，一键部署
 
 ```bash
 # 获取sealer工具
 wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
 
-# 获取CNStack社区版集群镜像并拉起集群
 sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m `hostname -i` -p $passwd
 ```
 
-最小功能集中仅包括容器服务敏捷版的基础能力。请参考[部署指南](./deploy/deploy-guide.md)，通过配置Clusterfile的方式，部署更多高级功能。这些高级功能也可以在管理控制台增量部署。
+多节点，配置IP参数，一键部署：
+
+```bash
+# 获取sealer工具
+wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
+
+# 示例IP：192.168.0.1(master) 192.168.0.2(worker) 192.168.0.3(worker) 192.168.0.4(worker)
+sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd
+```
+
+部署完成后，通过浏览器访问 `$Master_IP_1:30088` 即可以访问CNStack社区版-容器服务敏捷版的控制台（默认用户名：admin 默认密码：Ab123456）。
+
+注意，上述部署完成后，仅包括容器服务敏捷版基础能力，更多高级功能，请通过下面配置 Clusterfile 的方式，部署具备更多高级功能的集群。
+
+### 通过Clusterfile，实现高级配置
+
+#### 增加数据盘，启用 [open-local](https://github.com/alibaba/open-local)和更多集群组件
+
+环境要求：
+
+* 规格：推荐16C32GB
+* 磁盘：系统盘+数据盘各一块；系统盘50GB，数据盘50GB
+* OS：CentOS 7.8或者以上，推荐CentOS 7.8
+
+下载[Clusterfile](./deploy/Clusterfile)到本地并编辑，特别注意以下参数：
+
+* 分别搜索 `$MASTER_IP` 和 `$WORKER_IP`，根据实际部署环境替换IP
+* `$PASSWD`
+* 搜索`VG_DEV=#DataDiskDeviceName#`，替换`#DataDiskDeviceName#`，例如：`VG_DEV=/dev/vdb`
+  * `#DataDiskDeviceName#` 是你数据盘的设备名，可以通过 `lsblk -p` 查看
+  * 如果是多节点，需要所有节点都有同名的数据盘设备
+* 完成上述修改后，Clusterfile中默认开启了监控、日志以及弹性伸缩功能。
+
+执行：
+
+```bash
+# 获取sealer工具
+wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
+
+# 部署集群
+sealer apply -f Clusterfile
+```
+
+## 清理部署
+
+```bash
+# 执行sealer delete删除安装的管理集群
+sealer delete -a --force
+# 如果使用定制安装，启用了卷管理服务，删除平台创建的数据卷
+vgremove open-local-pool-0 --force 
+```
 
 ## 使用手册
 
-根据[部署指南](./deploy/deploy-guide.md)完成部署以后，通过浏览器访问 `$Master_IP_1:30088` 即可以访问CNStack社区版-容器服务敏捷版的控制台（默认用户名：admin，默认密码：Ab123456）。
-
-访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。访问[阿里云-云原生CNStack社区版使用手册](https://www.aliyun.com/activity/middleware/cnstack)，获取产品使用手册。
+访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。
+访问[阿里云-云原生CNStack社区版使用手册](https://www.aliyun.com/activity/middleware/cnstack)，获取产品使用手册。
 
 ## 依赖组件介绍
 
