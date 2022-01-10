@@ -1,0 +1,400 @@
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Cluster
+metadata:
+  name: my-cluster
+spec:
+  image: registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:a0ff3c_mvp
+  provider: BAREMETAL
+  ssh:
+    # SSH login password, if you use the key to log in, you don’t need to set it
+    passwd: $PASSWD
+    # ssh login user
+    user: root
+  network:
+    podCIDR: 100.64.0.0/10
+    svcCIDR: 10.96.0.0/22
+  masters:
+    ipList:
+     - $MASTER_IP_1
+  # If single node, make sure 'nodes' is removed
+  nodes:
+    ipList:
+     - $WORKER_IP_1
+     - $WORKER_IP_2
+
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Plugin
+metadata:
+  name: prepare_vg # Specify this plugin name,will dump in $rootfs/plugin dir.
+spec:
+  type: SHELL
+  action: PreInit # PreInit PreInstall PostInstall
+  # init data disk for open-local-lvm
+  # #DataDiskDeviceName# must be set as an available data disk name (lsblk -p), e.g. VG_DEV=/dev/vdb
+  data: |
+    VG_DEV=#DataDiskDeviceName#
+    yum install lvm2 -y
+    vgremove open-local-pool-0 --force || echo "no open-local-pool-0 found, volume group Cleaning OK..."
+    echo "start vgcreate. device name: $VG_DEV"
+    vgcreate open-local-pool-0 $VG_DEV
+    if [ $? -ne 0 ];then echo "vgcreate failed" && exit 1;fi
+    echo "vg preparation done with success."
+
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Plugin
+metadata:
+  name: install-open-local # Specify this plugin name,will dump in $rootfs/plugin dir.
+spec:
+  type: SHELL
+  action: PostInstall # PreInit PreInstall PostInstall
+  'on': $MASTER_IP_1
+  # install open-local
+  data: |
+    helm uninstall localpv
+    helm install -n kube-system open-local charts/open-local
+
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: cluster-addon-sc
+spec:
+  path: charts/cluster-addon-configuration/values.yaml
+  data: |
+      dataStorageClass: open-local-lvm
+
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: aecp-sc
+spec:
+  path: charts/aecp/values.yaml
+  # enables: monitoring/hpa/logging
+  data: |
+      # Default values for mychart.
+      # This is a YAML-formatted file.
+      # Declare variables to be passed into your templates.
+
+      rwxStorageClassName: open-local-lvm
+      rwoStorageClassName: open-local-lvm
+
+      installVersion: v1.5.3.0
+      installMode: OfflineWithPackage
+
+      imageHub:
+
+      monitor:
+        code: monitor
+        mode: AdapterInstall
+        solution: prometheus
+        namespace: monitoring
+        workloads:
+          - code: grafana
+            nameCN: 监控看板
+            deployName: grafana
+            deployType: Deployment
+          - code: kube-state-metrics
+            nameCN: k8s数据采集
+            deployName: kube-state-metrics
+            deployType: Deployment
+          - code: prometheus-operator
+            nameCN: 普罗米修斯operator
+            deployName: prometheus-operator
+            deployType: Deployment
+          - code: prometheus
+            nameCN: 普罗米修斯
+            deployName: prometheus-k8s
+            deployType: StatefulSet
+          - code: node-exporter
+            nameCN: 节点数据采集
+            deployName: node-exporter
+            deployType: Daemonset
+        endpoint:
+          type: svc
+          endpoint:
+            host: prometheus-operated
+            port: 9090
+
+      log:
+        code: logging
+        namespace: acs-system
+        mode: AdapterInstall
+        solution: loki
+        workloads:
+          - code: loki
+            nameCN: Loki日志服务
+            deployName: loki
+            deployType: StatefulSet
+          - code: loki-promtail
+            nameCN: Loki日常采集
+            deployName: loki-promtail
+            deployType: Daemonset
+        endpoint:
+          type: svc
+          endpoint:
+            host: loki-stack
+            port: 3100
+
+      registry:
+        code: registry
+        namespace: default
+
+      component:
+        enabledHA: false
+        nodeSelector: {}
+        tolerations: []
+
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: clusterconfiguraion-full-func
+spec:
+  path: manifests/clusterconfig.yaml
+  data: |
+      apiVersion: core.ecp.alibabacloud.com/v1beta1
+      kind: ClusterConfiguration
+      metadata:
+        annotations:
+          core.ecp.alibabacloud.com/listener-kinds: Deployment,Pod,StatefulSet,DaemonSet,Job
+        name: clusterconfiguration
+        namespace: cluster-local
+      spec:
+        components:
+        - code: kube_apiserver
+          default_enabled: false
+          describe: 接口服务器
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 接口服务器
+          name_en: API Server
+          role: k8s
+          solution:
+          - addons:
+            - kube-apiserver
+            enabled: true
+            name: kube_apiserver
+          version: 0.1.0
+          view: true
+        - code: kube_controller_manager
+          default_enabled: false
+          describe: 控制管理器
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 控制管理器
+          name_en: Controller Manager
+          role: k8s
+          solution:
+          - addons:
+            - kube-controller-manager
+            enabled: true
+            name: kube_controller_manager
+          version: 0.1.0
+          view: true
+        - code: kube_schedule
+          default_enabled: false
+          describe: 调度器
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 调度器
+          name_en: Scheduler
+          role: k8s
+          solution:
+          - addons:
+            - kube-scheduler
+            enabled: true
+            name: kube_scheduler
+          version: 0.1.0
+          view: true
+        - code: etcd
+          default_enabled: false
+          describe: 元数据库
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 元数据库
+          name_en: ETCD
+          role: k8s
+          solution:
+          - addons:
+            - etcd
+            enabled: true
+            name: etcd
+          version: 0.1.0
+          view: true
+        - code: dns
+          default_enabled: false
+          describe: DNS服务器
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: DNS服务器
+          name_en: DNS Server
+          role: k8s
+          solution:
+          - addons:
+            - coredns
+            enabled: true
+            name: coredns
+          version: 0.1.0
+          view: true
+        - code: network
+          default_enabled: false
+          describe: 网络
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 网络
+          name_en: Network Plugin
+          role: k8s
+          solution:
+          - addons:
+            - rama
+            enabled: false
+            name: rama
+          - addons:
+            - flannel
+            enabled: false
+            name: flannel
+          - addons:
+            - nimitz
+            enabled: false
+            name: nimitz
+          - addons:
+            - calico
+            enabled: false
+            name: calico
+          - addons:
+            - cilium
+            enabled: false
+            name: cilium
+          - addons:
+            - hybridnet
+            enabled: true
+            name: hybridnet
+          version: 0.1.0
+          view: true
+        - code: storage
+          default_enabled: false
+          describe: 存储
+          enable_uninstall: false
+          enabled: true
+          kubernetes_version: ""
+          managed: false
+          name: 存储
+          name_en: Storage Plugin
+          role: k8s
+          solution:
+          - addons:
+            - csiminio
+            enabled: false
+            name: csi-minio
+          - addons:
+            - openlocal
+            enabled: true
+            name: open-local
+          version: 0.1.0
+          view: true
+        - code: base
+          default_enabled: true
+          describe: 基础服务
+          enable_uninstall: true
+          enabled: true
+          kubernetes_version: '>= 1.14'
+          managed: true
+          name: 基础服务
+          name_en: Base
+          role: platform
+          solution:
+          - addons:
+            - dns-dog
+            - admission-webhook
+            enabled: true
+            name: base
+          version: 0.1.0-ce
+          view: true
+        - code: loadbalance
+          default_enabled: true
+          describe: 负载均衡
+          enable_uninstall: true
+          enabled: true
+          kubernetes_version: '>= 1.14'
+          managed: true
+          name: 负载均衡
+          name_en: Loadbalance
+          role: platform
+          solution:
+          - addons:
+            - ingress-controller
+            enabled: true
+            name: caas-ingress
+          version: 0.1.0
+          view: true
+        - code: monitor
+          default_enabled: false
+          dependencies:
+          - loadbalance
+          describe: 监控
+          enable_uninstall: true
+          enabled: true
+          kubernetes_version: '>= 1.16'
+          managed: true
+          name: 监控
+          name_en: Monitor
+          role: platform
+          solution:
+          - addons:
+            - prometheus
+            enabled: true
+            name: prometheus
+          version: 0.1.1-ce
+          view: true
+        - code: logging
+          default_enabled: false
+          dependencies:
+          - loadbalance
+          - monitor
+          describe: 日志
+          enable_uninstall: true
+          enabled: true
+          kubernetes_version: '>= 1.14'
+          managed: true
+          name: 日志
+          name_en: Log
+          role: platform
+          solution:
+          - addons:
+            - loki-stack
+            enabled: true
+            name: loki
+          version: 0.1.0-ce
+          view: true
+        - code: hpa
+          default_enabled: false
+          describe: 弹性伸缩
+          enable_uninstall: true
+          enabled: true
+          kubernetes_version: '>= 1.10'
+          managed: true
+          name: 弹性伸缩
+          name_en: HPA
+          role: platform
+          solution:
+          - addons:
+            - autoscale
+            enabled: true
+            name: autoscale
+          version: 0.1.0-ce
+          view: true
