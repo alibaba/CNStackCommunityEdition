@@ -31,7 +31,7 @@ spec:
   type: SHELL
   action: PreInit # PreInit PreInstall PostInstall
   # init data disk for open-local-lvm
-  # #DataDiskDeviceName# must be set as an available data disk name (lsblk -p), e.g. VG_DEV=/dev/vdb
+  # VG_DEV must be set as an available data disk name (lsblk -p), e.g. VG_DEV=/dev/vdb
   data: |
     VG_DEV=#DataDiskDeviceName#
     yum install lvm2 -y
