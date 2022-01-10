@@ -4,7 +4,7 @@
 
 > 前置要求：创建CNStack社区版环境，并通过浏览器访问 `$IP:30088`，登录密码：admin/Ab123456；本例所运行的环境是阿里云ECS 8C16G规格
 
-## 1. 开启集群
+## 开启集群
 
 在“集群运维”处，基础设施-集群，找到设置，点击“开启集群”
 ![Tux, the Linux mascot](./images/first-app/first-app_01.png)
@@ -15,7 +15,7 @@
 顺利开启的集群，如下：
 ![Tux, the Linux mascot](./images/first-app/first-app_01_2.png)
 
-## 2 创建资源配额
+## 创建资源配额
 
 进入平台管理，点击”默认组织“
 ![Tux, the Linux mascot](./images/first-app/first-app_02.png)
@@ -24,10 +24,10 @@
 ![Tux, the Linux mascot](./images/first-app/first-app_03.png)
 ![Tux, the Linux mascot](./images/first-app/first-app_04.png)
 
-根据“可用配额”提示（与所在集群规格有关），选择分配的资源，为了本例能够运行，最好1C1G
+根据“可用配额”提示（与所在集群规格有关），选择分配的资源，为了本例能够运行，需要大于1C1G
 ![Tux, the Linux mascot](./images/first-app/first-app_05.png)
 
-## 3 创建命名空间
+## 创建命名空间
 
 进入“命名空间管理”，选择创建命名空间 - 普通命名空间
 ![Tux, the Linux mascot](./images/first-app/first-app_06.png)
@@ -39,7 +39,7 @@
 成功以后结果如下
 ![Tux, the Linux mascot](./images/first-app/first-app_09.png)
 
-## 4 创建资源集
+## 创建资源集
 
 在“资源集管理”，点击创建资源集
 ![Tux, the Linux mascot](./images/first-app/first-app_09_1.png)
@@ -50,7 +50,7 @@
 成功结果如下，现在可以创建应用了：）
 ![Tux, the Linux mascot](./images/first-app/first-app_11.png)
 
-## 5 创建应用
+## 创建应用
 
 转到“应用运维”，确保吊顶信息正确，点击“创建应用”
 ![Tux, the Linux mascot](./images/first-app/first-app_12.png)
