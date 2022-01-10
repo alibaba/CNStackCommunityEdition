@@ -39,7 +39,7 @@ wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-a
 sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd
 ```
 
-部署完成后，通过浏览器访问 `$Master_IP_1:30088` 即可以访问CNStack社区版-容器服务敏捷版的控制台（默认用户名：admin 默认密码：Ab123456）。
+部署完成后，通过浏览器访问 `$Master_IP_1:30088` 即可以访问CNStack社区版-容器服务敏捷版的控制台（默认用户名：`admin` 默认密码：`Ab123456`）。
 
 注意，上述部署完成后，仅包括容器服务敏捷版基础能力，更多高级功能，请通过下面配置 Clusterfile 的方式，部署具备更多高级功能的集群。
 
