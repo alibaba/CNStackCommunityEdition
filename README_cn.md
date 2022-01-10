@@ -12,7 +12,7 @@ CNStack社区版（CNStack Community Edition, CNStack CE）是[阿里云云原�
 
 * 安全可靠：采用 ACK Distro 作为 K8s 基础，核心组件来自公有云ACK并经历了线上、线下众多场景考验
 * 轻量方便：最小功能集可以运行在笔记本上。通过 sealer 进行打包和交付，仅需数分钟便可以完成部署
-* 体验一致：社区版中ACK敏捷版与商业版ACK敏捷版同源，仅有部分功能有差异。未来会有更多功能开放
+* 体验一致：社区版中容器服务敏捷版与商业版同源，仅有部分功能有差异。未来会有更多功能开放
 * 迭代快速：版本节奏更快，更灵活，可以快速体验新功能
 * 兼容适配：通过网络插件[hybridnet](https://github.com/alibaba/hybridnet)和本地存储插件[open-local](https://github.com/alibaba/open-local)，最大限度适配多种基础设施。
 
