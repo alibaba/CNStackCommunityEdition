@@ -79,6 +79,10 @@ wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-a
 sealer apply -f Clusterfile
 ```
 
+## 快速开始
+
+* 访问[创建第一个Application]（doc/first-app.md），了解如何配置平台，配额，完成第一个应用的创建
+
 ## 清理部署
 
 ```bash
