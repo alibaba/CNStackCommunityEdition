@@ -79,6 +79,14 @@ wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-a
 sealer apply -f Clusterfile
 ```
 
+## 快速开始
+
+* 访问[创建第一个Application](./doc/first-app.md)，了解如何配置平台，配额，完成第一个应用的创建
+
+## 已知问题
+
+* 在资源受限的基础设施，例如笔记本环境，安装平台，服务启动后，用户登陆UI有可能会发现主机等资源并未显示，也没有错误信息显示。这是因为相关服务需要等待若干分钟获取基础设施资源，稍等几分钟资源等信息就会出现。
+
 ## 清理部署
 
 ```bash
@@ -90,8 +98,8 @@ vgremove open-local-pool-0 --force
 
 ## 使用手册
 
-访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。
-访问[阿里云-云原生CNStack社区版使用手册](https://www.aliyun.com/activity/middleware/cnstack)，获取产品使用手册。
+* 访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。
+* 访问[阿里云-云原生CNStack社区版使用手册](https://apsarastackdocument.oss-cn-hangzhou.aliyuncs.com/12_ApsaraACK/%E7%A4%BE%E5%8C%BA%E7%89%88/v1.1.0/%E9%98%BF%E9%87%8C%E4%BA%91%20CNStack%20V1.1.0%20%E7%A4%BE%E5%8C%BA%E7%89%88%20%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97%2020220110.pdf?spm=a2c4g.14484272.agile.29&file=%E9%98%BF%E9%87%8C%E4%BA%91%20CNStack%20V1.1.0%20%E7%A4%BE%E5%8C%BA%E7%89%88%20%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97%2020220110.pdf)，获取产品使用手册。
 
 ## 依赖组件介绍
 
