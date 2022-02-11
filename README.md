@@ -86,6 +86,7 @@ sealer apply -f Clusterfile
 ## 已知问题
 
 * 在资源受限的基础设施，例如笔记本环境，安装平台，服务启动后，用户登陆UI有可能会发现主机等资源并未显示，也没有错误信息显示。这是因为相关服务需要等待若干分钟获取基础设施资源，稍等几分钟资源等信息就会出现。
+* `kubectl top node` 没有返回，这是ACK Distro目前的一个问题，我们会尽快修复。修复建议见[链接](https://github.com/AliyunContainerService/ackdistro/issues/16#issuecomment-1035844104)
 
 ## 清理部署
 

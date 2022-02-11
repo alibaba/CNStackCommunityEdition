@@ -100,6 +100,7 @@ sealer apply -f Clusterfile
 ## Known Issues
 
 - In resource-constrained infrastructures, such as laptop environments, installation platforms, and service startups, it is possible that users logging into the UI may find that resources such as hosts are not displayed, and no error messages are displayed. This is because the service in question needs to wait for a number of minutes to obtain the infrastructure resources, and the information such as resources will appear after waiting for a few minutes.
+- `kubectl top node` fails. This is a bug already reported in ACK Distro, please refer to [link](https://github.com/AliyunContainerService/ackdistro/issues/16#issuecomment-1035844104) for workround. We will try to fix this soon.
 
 ## Uninstall & Clean up
 
