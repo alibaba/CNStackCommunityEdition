@@ -111,7 +111,7 @@ vgremove open-local-pool-0 --force
 
 ## 纯离线环境的部署
 
-如果你需要在一台完全没有互联网的机器上登录，请参考：[在离线环境部署 CNStack 社区版](./doc/on-premise-deploy.md)
+如果你需要在一台完全没有互联网的机器上部署，请参考：[在离线环境部署 CNStack 社区版](./doc/on-premise-deploy.md)
 
 ## 参考
 
