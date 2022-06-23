@@ -109,6 +109,10 @@ vgremove open-local-pool-0 --force
 * 网络插件：[hybridnet](https://github.com/alibaba/hybridnet)
 * 本地存储插件：[open-local](https://github.com/alibaba/open-local)
 
+## 纯离线环境的部署
+
+如果你需要在一台完全没有互联网的机器上登录，请参考：[在离线环境部署 CNStack 社区版](./doc/on-premise-deploy.md)
+
 ## 参考
 
 * [ACK Distro](https://github.com/AliyunContainerService/ackdistro)
