@@ -21,13 +21,13 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 
 ### 最小功能集，一键部署
 
-单节点，一键部署
-
 环境要求：
 
 * 规格：master节点8C16GB，worker节点2C4GB
 * 磁盘：根目录50GB以上可用磁盘空间
 * OS：CentOS 7.9，Anolis 8.6
+
+#### 单节点，一键部署
 
 ```bash
 # 获取sealer工具
@@ -39,7 +39,7 @@ wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnsta
 sealer run -f ClusterFile.yaml -m `hostname -i` -p $passwd
 ```
 
-多节点，master节点多IP环境，一键部署：
+#### 多节点，master节点多IP环境，一键部署：
 
 ```bash
 # 获取sealer工具
@@ -72,9 +72,9 @@ wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnsta
 
 默认情况下，CNStack使用csi-hostpath作为其默认存储类，如果想让CNStack更好地管理它使用的磁盘，请按需准备好裸的数据盘（无需分区及挂载）：
 
-● EtcdDevice: 分配给etcd的磁盘，容量必须大于20GiB，IOPS>3300，仅Master节点需要
-● StorageDevice: 分配给docker和kubelet的磁盘，容量建议大于200GiB
-● DockerRunDiskSize, KubeletRunDiskSize: 详见yaml说明
+* EtcdDevice: 分配给etcd的磁盘，容量必须大于20GiB，IOPS>3300，仅Master节点需要
+* StorageDevice: 分配给docker和kubelet的磁盘，容量建议大于200GiB
+* DockerRunDiskSize, KubeletRunDiskSize: 详见yaml说明
 
 准备好磁盘后，配置您的ClusterFile.yaml文件
 
@@ -137,13 +137,8 @@ kubectl get app -A
 
 # 等待所有App的状态为Running
 ```
-## 快速开始
 
-* 访问[创建第一个Application](./doc/first-app.md)，了解如何配置平台，配额，完成第一个应用的创建
-
-## 已知问题
-
-* 在资源受限的基础设施，例如笔记本环境，安装平台，服务启动后，用户登陆UI有可能会发现主机等资源并未显示，也没有错误信息显示。这是因为相关服务需要等待若干分钟获取基础设施资源，稍等几分钟资源等信息就会出现。
+## 产品卸载
 
 ```bash
 # 执行sealer delete删除安装的管理集群
@@ -151,6 +146,14 @@ sealer delete -a --force
 # 如果使用定制安装，启用了卷管理服务，删除平台创建的数据卷
 vgremove open-local-pool-0 --force 
 ```
+
+## 快速开始
+
+* 访问[创建第一个Application](./doc/first-app.md)，了解如何配置平台，配额，完成第一个应用的创建
+
+## 已知问题
+
+* 在资源受限的基础设施，例如笔记本环境，安装平台，服务启动后，用户登陆UI有可能会发现主机等资源并未显示，也没有错误信息显示。这是因为相关服务需要等待若干分钟获取基础设施资源，稍等几分钟资源等信息就会出现。
 
 ## 使用手册
 
@@ -166,7 +169,21 @@ vgremove open-local-pool-0 --force
 
 ## 纯离线环境的部署
 
-如果你需要在一台完全没有互联网的机器上部署，请参考：[在离线环境部署 CNStack 社区版](./doc/on-premise-deploy.md)
+如果部署环境没有互联网连接，请执行以下命令下载安装包
+
+```bash
+# 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
+sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+
+# 保存集群镜像为tar文件
+sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4 -o cnstack.tar
+
+# 将集群镜像cnstack.tar和配置文件 ClusterFile.yaml传输到没有互联网连接的部署主机，在部署主机执行以下命令
+sealer load -i cnstack.tar
+```
+
+然后，可以按照产品部署指南部署产品
 
 ## 参考
 
