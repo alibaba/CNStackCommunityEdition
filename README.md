@@ -169,6 +169,7 @@ vgremove open-local-pool-0 --force
 
 ```bash
 # 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4
 wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
