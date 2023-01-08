@@ -25,61 +25,118 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 
 环境要求：
 
-* 规格：推荐8C12GB
+* 规格：master节点8C16GB，worker节点2C4GB
 * 磁盘：根目录50GB以上可用磁盘空间
 * OS：CentOS 7.9，Anolis 8.6
 
 ```bash
 # 获取sealer工具
-wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
-sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m `hostname -i` -p $passwd
+# 获取配置文件
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+
+sealer run -f ClusterFile.yaml -m `hostname -i` -p $passwd
 ```
 
-多节点，配置IP参数，一键部署：
+多节点，master节点多IP环境，一键部署：
 
 ```bash
 # 获取sealer工具
-wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
-# 示例IP：192.168.0.1(master) 192.168.0.2(worker) 192.168.0.3(worker) 192.168.0.4(worker)
-sealer run registry.cn-qingdao.aliyuncs.com/sealer-apps/cnstack-ce:1.1.0 -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd
+# 获取配置文件
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+
+# 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）192.168.0.2（worker1）192.168.0.3（worker2）192.168.0.4（worker3）
+sealer run -f ClusterFile.yaml -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
+
+# 查看App状态
+kubectl get app -A
+
+# 等待所有App的状态为Running
 ```
 
-部署完成后，通过浏览器访问 `$Master_IP_1:30088` 即可以访问CNStack社区版-容器服务敏捷版的控制台（默认用户名：`admin` 默认密码：`Ab123456`）。
+部署完成后，通过浏览器访问 `$Master_IP_1:30383` 即可以访问CNStack社区版的控制台（默认用户名：`admin` 默认密码：`Ab123456`）。
 
-注意，上述部署完成后，仅包括容器服务敏捷版基础能力，更多高级功能，请通过下面配置 Clusterfile 的方式，部署具备更多高级功能的集群。
+注意，上述命令安装了CNStack和多集群管理云服务，但是CNStack在各个纳管集群内的日志和监控组件默认没有安装，可以在平台管理的能力中心页面运维CNStack，更改数据面配置安装日志和监控组件。此外，制品管理能力需要对接第三方的[Harbor服务](https://github.com/goharbor)。在CNStack社区版没有包含Harbor服务。
 
 ### 通过Clusterfile，实现高级配置
 
-#### 增加数据盘，启用 [open-local](https://github.com/alibaba/open-local)和更多集群组件
-
-环境要求：
-
-* 规格：推荐16C32GB
-* 磁盘：系统盘+数据盘各一块；系统盘50GB，数据盘50GB
-* OS：CentOS 7.8或者以上，推荐CentOS 7.8
-
-下载[Clusterfile](./deploy/Clusterfile)到本地并编辑，特别注意以下参数：
-
-* 分别搜索 `$MASTER_IP` 和 `$WORKER_IP`，根据实际部署环境替换IP
-* `$PASSWD`
-* 搜索`VG_DEV=#DataDiskDeviceName#`，替换`#DataDiskDeviceName#`，例如：`VG_DEV=/dev/vdb`
-  * `#DataDiskDeviceName#` 是你数据盘的设备名，可以通过 `lsblk -p` 查看
-  * 如果是多节点，需要所有节点都有同名的数据盘设备
-* 完成上述修改后，Clusterfile中默认开启了监控、日志以及弹性伸缩功能
-  * （可选）运行 `cat Clusterfile | grep -n -e MASTER -e WORKER -e DataDiskDeviceName -e PASSWD` 确定Clusterfile是否完成了替换
-
-执行：
-
 ```bash
 # 获取sealer工具
-wget -c "http://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.5.2-linux-amd64.tar.gz" && tar -xvf sealer-v0.5.2-linux-amd64.tar.gz -C /usr/bin
-
-# 部署集群
-sealer apply -f Clusterfile
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
+# 获取配置文件
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
 ```
 
+默认情况下，CNStack使用csi-hostpath作为其默认存储类，如果想让CNStack更好地管理它使用的磁盘，请按需准备好裸的数据盘（无需分区及挂载）：
+
+● EtcdDevice: 分配给etcd的磁盘，容量必须大于20GiB，IOPS>3300，仅Master节点需要
+● StorageDevice: 分配给docker和kubelet的磁盘，容量建议大于200GiB
+● DockerRunDiskSize, KubeletRunDiskSize: 详见yaml说明
+
+准备好磁盘后，配置您的ClusterFile.yaml文件
+
+```bash
+apiVersion: sealer.cloud/v2
+kind: Cluster
+metadata:
+  name: my-cluster # 固定为my-cluster
+spec:
+  ...
+  env: # all env are NOT necessary
+    - Addons=ack-node-problem-detector,kube-prometheus-crds
+    - PodCIDR=172.45.0.0/16,5408:4003:10bb:6a01:83b9:6360:c66d:0000/112 # pod subnet, support ipv6 cidr, must be dual stack cidr
+    - SvcCIDR=10.96.0.0/16,6408:4003:10bb:6a01:83b9:6360:c66d:0000/112 # service subnet, support ipv6 cidr, must be dual stack cidr
+    - EtcdDevice=/dev/vdb # EtcdDevice is device for etcd, default is "", which will use system disk
+    - StorageDevice=/dev/vdc # StorageDevice is device for kubelet and container daemon, default is "", which will use system disk
+    - YodaDevice=/dev/vdd # YodaDevice is device for open-local, if not specified, open local can't provision pv
+    - DockerRunDiskSize=100 # unit is GiB, capacity for /var/lib/docker, default is 100
+    - KubeletRunDiskSize=100 # unit is GiB, capacity for /var/lib/kubelet, default is 100
+    - ComponentToInstall=logging,monitor # 需要默认安装的组件
+    - gatewayExternalIP=${master_eip} # 用于对外暴露CNStack管控服务入口，该地址要能够被您的浏览器访问到
+    - ingressExternalIP=${master_eip} # 用于对外暴露CNStack数据服务入口，该地址要能够被您的浏览器访问到
+    - gatewayPort=30383 # 对外暴露的CNStack平台管控的端口
+    - gatewayAPIServerPort=30384 # 对外暴露的K8s API的端口
+    - ingressHttpPort=80 # 对外暴露的CNStack平台数据的端口（HTTP）
+    - ingressHttpsPort=443 # 对外暴露的CNStack平台数据的端口（HTTPS）
+  ssh:
+    passwd: "password"
+    #user: root # default is root
+    #port: "22" # default is 22
+    #pk: /root/.ssh/id_rsa
+    #pkPasswd: xxx
+  hosts:
+    - ips: # support ipv6
+        - 1.1.1.1
+      roles: [ master ] # add role field to specify the node role
+      env: # all env are NOT necessary, rewrite some nodes has different env config
+        - EtcdDevice=/dev/vdb
+        - StorageDevice=/dev/vde
+      # rewrite ssh config if some node has different passwd...
+      # ssh:
+      #  user: root
+      #  passwd: passwd
+      #  port: "22"
+    - ips: # support ipv6
+        - 2.2.2.2
+        - 3.3.3.3
+        - 4.4.4.4
+      roles: [ node ]
+```
+
+配置完成ClusterFile.yaml后，执行`sealer run`命令安装CNStack社区版
+
+```bash
+# 运行sealer run命令
+sealer run -f ClusterFile.yaml 
+
+# 查看App状态
+kubectl get app -A
+
+# 等待所有App的状态为Running
+```
 ## 快速开始
 
 * 访问[创建第一个Application](./doc/first-app.md)，了解如何配置平台，配额，完成第一个应用的创建
@@ -87,9 +144,6 @@ sealer apply -f Clusterfile
 ## 已知问题
 
 * 在资源受限的基础设施，例如笔记本环境，安装平台，服务启动后，用户登陆UI有可能会发现主机等资源并未显示，也没有错误信息显示。这是因为相关服务需要等待若干分钟获取基础设施资源，稍等几分钟资源等信息就会出现。
-* `kubectl top node` 没有返回，这是ACK Distro目前的一个问题，我们会尽快修复。修复建议见[链接](https://github.com/AliyunContainerService/ackdistro/issues/16#issuecomment-1035844104)
-
-## 清理部署
 
 ```bash
 # 执行sealer delete删除安装的管理集群
@@ -101,7 +155,7 @@ vgremove open-local-pool-0 --force
 ## 使用手册
 
 * 访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。
-* 访问[阿里云-云原生CNStack社区版使用手册](https://apsarastackdocument.oss-cn-hangzhou.aliyuncs.com/12_ApsaraACK/%E7%A4%BE%E5%8C%BA%E7%89%88/v1.1.0/%E9%98%BF%E9%87%8C%E4%BA%91%20CNStack%20V1.1.0%20%E7%A4%BE%E5%8C%BA%E7%89%88%20%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97%2020220110.pdf?spm=a2c4g.14484272.agile.29&file=%E9%98%BF%E9%87%8C%E4%BA%91%20CNStack%20V1.1.0%20%E7%A4%BE%E5%8C%BA%E7%89%88%20%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97%2020220110.pdf)，获取产品使用手册。
+* 访问CNStack平台内置的在线用户文档
 
 ## 依赖组件介绍
 
