@@ -176,7 +176,7 @@ wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnsta
 # 保存集群镜像为tar文件
 sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4 -o cnstack.tar
 
-# 将集群镜像cnstack.tar和配置文件 ClusterFile.yaml传输到没有互联网连接的部署主机，在部署主机执行以下命令
+# 将sealer，集群镜像cnstack.tar和配置文件 ClusterFile.yaml传输到没有互联网连接的部署主机，在部署主机执行以下命令
 sealer load -i cnstack.tar
 ```
 
