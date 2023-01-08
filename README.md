@@ -34,7 +34,7 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
 sealer run -f ClusterFile.yaml -m `hostname -i` -p $passwd
 ```
@@ -46,7 +46,7 @@ sealer run -f ClusterFile.yaml -m `hostname -i` -p $passwd
 wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
 # 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）192.168.0.2（worker1）192.168.0.3（worker2）192.168.0.4（worker3）
 sealer run -f ClusterFile.yaml -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
@@ -67,7 +67,7 @@ kubectl get app -A
 # 获取sealer工具
 wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 ```
 
 默认情况下，CNStack使用csi-hostpath作为其默认存储类，如果想让CNStack更好地管理它使用的磁盘，请按需准备好裸的数据盘（无需分区及挂载）：
@@ -174,7 +174,7 @@ vgremove open-local-pool-0 --force
 ```bash
 # 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
 sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
 # 保存集群镜像为tar文件
 sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4 -o cnstack.tar
