@@ -36,7 +36,8 @@ wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9
 # 获取配置文件
 wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
-sealer run -f ClusterFile.yaml -m `hostname -i` -p $passwd
+# 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）
+sealer run -f ClusterFile.yaml -m 192.168.0.1 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
 ```
 
 #### 多节点，master节点多IP环境，一键部署：
