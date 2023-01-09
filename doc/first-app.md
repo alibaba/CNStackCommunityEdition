@@ -85,4 +85,35 @@ CNStack部署后会创建名为“cluster-local”的管理集群，该集群如
 
 ### 创建模板应用，发布一个“云组件”实例
 
-平台支持模板化的应用实例管理。用户可以基于实现准备好的应用模板，在项目中按需实例化，并持续运维管理。模板应用分两种形态：云组件和HelmChart应用。云组件的包，由平台管理员在能力中心进行管理。项目成员在项目中按需实例化；而HelmChart应用的包，则由项目管理员在项目的制品仓库中上传，并且仅能用于当前项目。
+平台支持模板化的应用实例管理。用户可以基于实现准备好的应用模板，在项目中按需实例化，并持续运维管理。模板应用分两种形态：云组件和HelmChart应用。云组件的包，由平台管理员在能力中心进行管理。项目成员在项目中按需实例化。而HelmChart应用的包，则由项目管理员在项目的制品仓库中上传，并配置共享范围，缺省仅能用于当前项目。
+
+#### 云组件的包管理
+
+平台管理员，进入“能力中心”的“云组件”菜单，进行云组件包的上传。云组件包，可以来自于第三方供应商，也可以用户自行封装。符合helm charts规范的包都可以作为云组件管理。
+
+![image](https://user-images.githubusercontent.com/8002217/211236995-b4226f50-d7c2-4106-b7c3-8eea0577a621.png)
+
+上传实现准备好的包文件
+
+![image](https://user-images.githubusercontent.com/8002217/211237046-f6651578-f1da-49a1-ae8c-a8130eb3fb38.png)
+
+在云组件列表中查看上传的“云组件”
+
+![image](https://user-images.githubusercontent.com/8002217/211237268-bc65298b-ad0b-41bc-b7f9-3b807047a3c3.png)
+
+#### 云组件的实例化
+
+项目管理员进入工作空间的“项目管理”页面，并进入“模板应用”菜单
+
+![image](https://user-images.githubusercontent.com/8002217/211237416-5f7561af-0b07-4f64-9f96-70d9d879aa3f.png)
+
+项目管理员开始“创建实例”，选择云组件 “apache”，以及合适的版本，并配置必要的参数
+
+![image](https://user-images.githubusercontent.com/8002217/211237492-16da9dd8-91df-4694-8f3a-7ab2f780ad13.png)
+
+部署完成后，项目成员可以持续对该实例进行运维
+
+![image](https://user-images.githubusercontent.com/8002217/211237549-12f91b0b-fd6b-4a78-9050-5e6a35cecc58.png)
+
+
+
