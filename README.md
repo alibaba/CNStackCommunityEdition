@@ -58,9 +58,14 @@ kubectl get app -A
 # 等待所有App的状态为Running
 ```
 
-部署完成后，通过浏览器访问 `$Master_IP_1:30383` 即可以访问CNStack社区版的控制台（默认用户名：`admin` 默认密码：`Ab123456`）。
+部署完成后，通过浏览器访问 `https://$Master_IP_1:30383` 即可以访问CNStack社区版的控制台（默认用户名：`admin` 默认密码：`Ab123456`）。
 
 注意，上述命令安装了CNStack和多集群管理云服务，但是CNStack在各个纳管集群内的日志和监控组件默认没有安装，可以在平台管理的能力中心页面运维CNStack，更改数据面配置安装日志和监控组件。此外，制品管理能力需要对接第三方的[Harbor服务](https://github.com/goharbor)。在CNStack社区版没有包含Harbor服务。
+
+![image](https://user-images.githubusercontent.com/8002217/211275427-e9186ce1-f6b8-406d-b1f0-177dd3693bd5.png)
+
+![image](https://user-images.githubusercontent.com/8002217/211275731-7b31be1a-d7ff-43ef-9064-a6a0a59c82b7.png)
+
 
 ### 通过Clusterfile，实现高级配置
 
