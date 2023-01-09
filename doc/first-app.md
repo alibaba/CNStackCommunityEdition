@@ -1,31 +1,43 @@
 # 创建第一个应用
 
-在新部署集群中创建第一应用，要先执行开启集群、创建资源配额、创建命名空间、创建资源集的系列操作。这个例子帮助你快速完成一个Nginx应用的创建。
+下图是在CNStack创建应用的简要流程
 
-> 前置要求：创建CNStack社区版环境，并通过浏览器访问 `$IP:30088`，登录密码：admin/Ab123456；本例所运行的环境是阿里云ECS 8C16G规格
+![image](https://user-images.githubusercontent.com/8002217/211233038-c88a1a67-5653-422d-a481-8f620096b7c4.png)
 
-## 开启集群
+## 创建业务集群
 
-在“集群运维”处，基础设施-集群，找到设置，点击“开启集群”
-![Tux, the Linux mascot](./images/first-app/first-app_01.png)
+CNStack部署后会创建名为“cluster-local”的管理集群，该集群如果有足够的工作节点可以部署应用，使用“cluster-local”部署应用的场景可以跳过本节。使用者也可以选择创建业务集群部署应用。
 
-在仅包含基础能力版本中，可能有下面的提示，点击确定
-![Tux, the Linux mascot](./images/first-app/first-app_01_1.png)
+### 准备业务集群资源
 
-顺利开启的集群，如下：
-![Tux, the Linux mascot](./images/first-app/first-app_01_2.png)
+当前平台所在集群的子网内，分配至少一个节点作为目标集群的运行环境。节点需要满足的条件和CNStack平台部署时的条件一样，master节点8C16G、50G系统盘，worker节点2C4G，50G系统盘。
 
-## 创建资源配额
+#### 创建集群
 
-进入平台管理，点击”默认组织“
-![Tux, the Linux mascot](./images/first-app/first-app_02.png)
+进入“集群管理菜单”，可以看到“集群创建按钮”
 
-点击”添加配额“，选择“资源配额”
-![Tux, the Linux mascot](./images/first-app/first-app_03.png)
-![Tux, the Linux mascot](./images/first-app/first-app_04.png)
+![image](https://user-images.githubusercontent.com/8002217/211234935-17f04b23-a378-4c85-b752-596eefefe82d.png)
 
-根据“可用配额”提示（与所在集群规格有关），选择分配的资源，为了本例能够运行，需要大于1C1G
-![Tux, the Linux mascot](./images/first-app/first-app_05.png)
+#### 配置集群创建参数
+
+在“Master节点配置”中，主要有以下四个配置
+
+* 是否允许调度业务负载。作为入门验证，建议设置为允许，以减少测试资源需求。
+* etcd数据盘。作为入门验证，建议设置为“与系统盘共享”，以减少磁盘需求。
+* 管控数据存储。作为入门验证，建议设置为“与系统盘共享”，以减少磁盘需求。
+* 本地存储池。如果第三步选择了“从本地盘调度池中划分”，需要配置用于作为本地存储池的磁盘分区。可以在目标节点使用lsblk，获取节点的磁盘分区情况。找一个合适的未使用分区填写在这里，例如，“/dev/vdb”。
+
+![image](https://user-images.githubusercontent.com/8002217/211235242-5fcae504-0c5a-4365-98a1-f27fb36bedd0.png)
+
+#### 等待集群创建并纳管
+
+这一步系统会自动执行，不需要用户介入
+
+![image](https://user-images.githubusercontent.com/8002217/211235363-308af36e-96cf-4f92-b3dd-85d04c2e9668.png)
+
+## 平台管理员创建租户，并授权资源
+
+
 
 ## 创建命名空间
 
