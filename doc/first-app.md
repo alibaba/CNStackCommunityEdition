@@ -37,58 +37,52 @@ CNStack部署后会创建名为“cluster-local”的管理集群，该集群如
 
 ## 平台管理员创建租户，并授权资源
 
+### 创建租户
 
+可以直接使用“内置管理账号”（admin）作为租户管理员
 
-## 创建命名空间
+![image](https://user-images.githubusercontent.com/8002217/211235677-7ea3902b-f945-41c5-a9c9-346474565789.png)
 
-进入“命名空间管理”，选择创建命名空间 - 普通命名空间
-![Tux, the Linux mascot](./images/first-app/first-app_06.png)
-![Tux, the Linux mascot](./images/first-app/first-app_07.png)
+### 授权资源给租户
 
-设置该命名空间的配额
-![Tux, the Linux mascot](./images/first-app/first-app_08.png)
+可以将集群的默认节点组授权给租户
 
-成功以后结果如下
-![Tux, the Linux mascot](./images/first-app/first-app_09.png)
+![image](https://user-images.githubusercontent.com/8002217/211235756-91f403ea-5d4d-4081-8d11-3416c768219b.png)
 
-## 创建资源集
+## 租户管理员创建项目，并授权资源
 
-在“资源集管理”，点击创建资源集
-![Tux, the Linux mascot](./images/first-app/first-app_09_1.png)
+### 创建项目
 
-设置资源集名称，并和管理员，命名空间绑定
-![Tux, the Linux mascot](./images/first-app/first-app_10.png)
+可以直接使用“内置管理账号”（admin）作为项目管理员
 
-成功结果如下，现在可以创建应用了：）
-![Tux, the Linux mascot](./images/first-app/first-app_11.png)
+![image](https://user-images.githubusercontent.com/8002217/211235871-7748542b-0457-410c-9118-ab7bf2930c48.png)
 
-## 创建应用
+### 授权资源给项目
 
-转到“应用运维”，确保吊顶信息正确，点击“创建应用”
-![Tux, the Linux mascot](./images/first-app/first-app_12.png)
+租户可以授权全部或者部分自己拥有权限的资源给项目。与此同时，命名空间也被同步创建
 
-选择自定义
-![Tux, the Linux mascot](./images/first-app/first-app_13.png)
+![image](https://user-images.githubusercontent.com/8002217/211236022-edbfd367-2661-461d-8282-b2c641da8405.png)
 
-填写“应用名称”，然后下一步
-![Tux, the Linux mascot](./images/first-app/first-app_14.png)
+## 项目管理员或其他成员发布工作负载、模板应用等
 
-填写容器名称，选择镜像选择“自定义”
-![Tux, the Linux mascot](./images/first-app/first-app_15.png)
+项目管理员或其他成员在“工作空间”的“我的项目”中，可以看到其拥有权限的所有项目清单
 
-镜像地址可以在本机docker images查看，或者填写其它可以获取的版本。例如：
+![image](https://user-images.githubusercontent.com/8002217/211236170-0ddb6260-53ec-446b-966e-809af2994613.png)
 
-`ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/nginx:1.17.10`
+### 创建工作负载
 
-端口选择 30099 （确保这个端口在本机没有占用），性能选择“基本性能”
-![Tux, the Linux mascot](./images/first-app/first-app_16.png)
+可以创建有状态，或无状态的工作负载
 
-应用配置处，保持默认配置即可，点击完成，即创建成功
-![Tux, the Linux mascot](./images/first-app/first-app_17.png)
-![Tux, the Linux mascot](./images/first-app/first-app_18.png)
+![image](https://user-images.githubusercontent.com/8002217/211236230-7d1efd8f-4dec-4f0b-a3c9-1a10bf5d8d5b.png)
 
-点击“返回列表”，即可看到应用情况
+为了简化操作，可以直接使用Demo镜像
 
-![Tux, the Linux mascot](./images/first-app/first-app_19.png)
+![image](https://user-images.githubusercontent.com/8002217/211236265-bc7a900b-94ca-49fd-ab0a-c8422552c6d1.png)
 
-然后可以参考用户手册，进行更多操作。
+创建完成之后，进入详情页，查看Pod运行情况
+
+![image](https://user-images.githubusercontent.com/8002217/211236291-9862f612-6257-4973-8cbb-3ff61f3d25d5.png)
+
+### 创建模板应用，发布一个“云组件”实例
+
+平台支持模板化的应用实例管理。用户可以基于实现准备好的应用模板，在项目中按需实例化，并持续运维管理。模板应用分两种形态：云组件和HelmChart应用。云组件的包，由平台管理员在能力中心进行管理。项目成员在项目中按需实例化；而HelmChart应用的包，则由项目管理员在项目的制品仓库中上传，并且仅能用于当前项目。
