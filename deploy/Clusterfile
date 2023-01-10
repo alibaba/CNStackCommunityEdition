@@ -13,7 +13,7 @@ spec:
     - gatewayExposeMode=ip
     - DefaultStorageClass=csi-hostpath
     - PlatformType=community
-  image: ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-4
+  image: ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-5
   registry:
     localRegistry:
       cert: {}
