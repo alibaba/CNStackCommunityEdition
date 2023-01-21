@@ -91,20 +91,27 @@ metadata:
   name: my-cluster # 固定为my-cluster
 spec:
   ...
-  env: # all env are NOT necessary
+  env: # all env are NOT necessary，所有的env变量都是非必填项
+    # 需要自动安装的ACKDISTRO的组件，默认为空，支持ack-node-problem-detector,kube-prometheus-crds,paralb
     - Addons=ack-node-problem-detector,kube-prometheus-crds
+    # 需要自动安装的CNStack组件，默认为空，支持logging,monitor
+    - ComponentToInstall=logging,monitor # 需要默认安装的组件
+    # 容器网络配置
     - PodCIDR=172.45.0.0/16,5408:4003:10bb:6a01:83b9:6360:c66d:0000/112 # pod subnet, support ipv6 cidr, must be dual stack cidr
     - SvcCIDR=10.96.0.0/16,6408:4003:10bb:6a01:83b9:6360:c66d:0000/112 # service subnet, support ipv6 cidr, must be dual stack cidr
+    # 存储盘配置
     - EtcdDevice=/dev/vdb # EtcdDevice is device for etcd, default is "", which will use system disk
     - StorageDevice=/dev/vdc # StorageDevice is device for kubelet and container daemon, default is "", which will use system disk
     - YodaDevice=/dev/vdd # YodaDevice is device for open-local, if not specified, open local can't provision pv
     - DockerRunDiskSize=100 # unit is GiB, capacity for /var/lib/docker, default is 100
     - KubeletRunDiskSize=100 # unit is GiB, capacity for /var/lib/kubelet, default is 100
-    - ComponentToInstall=logging,monitor # 需要默认安装的组件
-    - gatewayExternalIP=${master_eip} # 用于对外暴露CNStack管控服务入口，该地址要能够被您的浏览器访问到
-    - ingressExternalIP=${master_eip} # 用于对外暴露CNStack数据服务入口，该地址要能够被您的浏览器访问到
+    # CNStack平台对外暴露方式的配置
+    - gatewayExternalIP=${master0实例公网 EIP 或 Gateway SLB 对外IP，该地址要能够被您的浏览器访问到}
+    - ingressExternalIP=${master0实例公网 EIP 或 Ingress SLB 对外IP，该地址要能够被您的浏览器访问到}
+    - gatewayInternalIP=${master0内部ip 或者 Gateway SLB 内部IP}
+    - ingressInternalIP=${master0内部ip 或者 Ingress SLB 内部IP}
+    - gatewayExposeMode=ip_domain # 平台对外暴露模式，可配置为ip,ip_domain,domain，默认是ip_domain
     - gatewayPort=30383 # 对外暴露的CNStack平台管控的端口
-    - gatewayAPIServerPort=30384 # 对外暴露的K8s API的端口
     - ingressHttpPort=80 # 对外暴露的CNStack平台数据的端口（HTTP）
     - ingressHttpsPort=443 # 对外暴露的CNStack平台数据的端口（HTTPS）
   ssh:
@@ -131,6 +138,27 @@ spec:
         - 4.4.4.4
       roles: [ node ]
 ```
+#### 集群参数说明
+
+- gatewayExternalIP、gatewayInternalIP
+    - gatewayExternalIP 表示 Gateway 外部IP，gatewayInternalIP 表示 Gateway 内部IP。
+    - 默认为master0的地址。
+- ingressExternalIP、ingressInternalIP
+    - ingressExternalIP 表示 Ingress 外部IP，ingressInternalIP 表示 Ingress 内部IP。
+    - 默认为master0的地址。
+- gatewayExposeMode
+    - 平台对外暴露模式，可配置ip,ip_domain,domain，默认是ip_domain。
+    - 如果配置为ip，平台只能通过 gatewayExternalIP 和 gatewayPort 来访问。
+    - 如果配置为domain，平台只能通过 gatewayDomain 和 gatewayPort 来访问。
+    - 如配置为ip_domain，即为混合模式，可以通过 IP 或域名访问，通过IP或域名访问时，会共享Cookie，所以需要确保IP和域名都能访问。
+- PlatformCAPath、PlatformCAKeyPath
+    - 用户自定义CA证书。可以是自签发的Root CA证书和Key，也可以是Intermediate CA(中间CA)的证书和Key。
+    - 如果不配置，则会自签发Root CA，并可以在平台下载证书，用于系统信任证书。
+- gatewayDomain
+    - 平台域名，默认为 cnstack.local
+    - 会根据平台域名自动生成ingress的下级域名：ingress.${gatewayDomain}
+- gatewayPort
+    - 平台访问端口，默认为30383。
 
 配置完成ClusterFile.yaml后，执行`sealer run`命令安装CNStack社区版
 
