@@ -11,7 +11,7 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 ## 产品优势
 
 * 安全可靠：采用 [ACK Distro](https://github.com/AliyunContainerService/ackdistro) 作为 K8s 基础，核心组件来自公有云ACK并经历了线上、线下众多场景考验
-* 轻量方便：最小功能集可以运行在笔记本上。通过 sealer 进行打包和交付，仅需数分钟便可以完成部署
+* 轻量方便：最小功能集可以运行在笔记本上。通过 [sealer](https://github.com/alibaba/sealer) 进行打包和交付，仅需数分钟便可以完成部署
 * 体验一致：社区版与商业版同源，仅有高可用部署等部分差异。未来会有更多功能开放
 * 完整生态：“云服务”，“云组件”标准规范和线上集成发布服务[云原生交付平台ADP](https://www.aliyun.com/product/aliware/adp)提供灵活，方便的自助能力扩展
 * 迭代快速：版本节奏更快，更灵活，可以快速体验新功能
