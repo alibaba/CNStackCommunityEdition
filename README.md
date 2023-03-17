@@ -29,6 +29,8 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 * 磁盘：根目录50GB以上可用磁盘空间
 * OS：CentOS 7.9，Anolis 8.6
 
+在master节点执行以下安装命令：
+
 #### 单节点，一键部署
 
 ```bash
