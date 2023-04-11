@@ -26,8 +26,12 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 环境要求：
 
 * 规格：master节点8C16GB，worker节点2C4GB
-* 磁盘：根目录50GB以上可用磁盘空间
+* 磁盘：根目录80GB以上可用磁盘空间
 * OS：CentOS 7.9，Anolis 8.6
+* 架构：amd64，arm64
+
+更为详细的环境要求请参考 [ACK Distro环境要求](https://github.com/AliyunContainerService/ackdistro/blob/main/docs/user-guide/requirements_zh.md)。
+
 
 在master节点执行以下安装命令：
 
@@ -35,10 +39,11 @@ CNStack 2.0 社区版包括CNStack和多集群管理云服务。除了高可用�
 
 ```bash
 # 获取sealer工具
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
+ARCH=amd64 # or arm64
+wget http://sealerio.oss-cn-shanghai.aliyuncs.com/releases/sealer-v0.9.3-linux-${ARCH}.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-5-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-3-clusterfile.yaml -O ClusterFile.yaml
 
 # 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）
 sealer run -f ClusterFile.yaml -m 192.168.0.1 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
@@ -48,10 +53,11 @@ sealer run -f ClusterFile.yaml -m 192.168.0.1 -p $passwd -e gatewayExternalIP=13
 
 ```bash
 # 获取sealer工具
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
+ARCH=amd64 # or arm64
+wget http://sealerio.oss-cn-shanghai.aliyuncs.com/releases/sealer-v0.9.3-linux-${ARCH}.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-5-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-3-clusterfile.yaml -O ClusterFile.yaml
 
 # 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）192.168.0.2（worker1）192.168.0.3（worker2）192.168.0.4（worker3）
 sealer run -f ClusterFile.yaml -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
@@ -72,13 +78,6 @@ kubectl get app -A
 
 
 ### 通过Clusterfile，实现高级配置
-
-```bash
-# 获取sealer工具
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
-# 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-5-clusterfile.yaml -O ClusterFile.yaml
-```
 
 默认情况下，CNStack使用csi-hostpath作为其默认存储类，如果想让CNStack更好地管理它使用的磁盘，请按需准备好裸的数据盘（无需分区及挂载）：
 
@@ -176,6 +175,8 @@ kubectl get app -A
 # 等待所有App的状态为Running
 ```
 
+如想了解更多的配置参数，请参考 [ACK Distro进阶配置方式](https://github.com/AliyunContainerService/ackdistro/blob/main/docs/user-guide/getting-started_zh.md#%E8%BF%9B%E9%98%B6%E4%BD%BF%E7%94%A8%E7%94%9F%E4%BA%A7%E7%BA%A7%E5%88%AB%E7%9A%84%E9%85%8D%E7%BD%AE%E5%88%9B%E5%BB%BAdistro%E9%9B%86%E7%BE%A4)
+
 ## 产品卸载
 
 ```bash
@@ -207,12 +208,10 @@ vgremove open-local-pool-0 --force
 
 ```bash
 # 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
-sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-5
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-0-1-ce-5-clusterfile.yaml -O ClusterFile.yaml
+sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-3
 
 # 保存集群镜像为tar文件
-sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-0-1-ce-5 -o cnstack.tar
+sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-3 -o cnstack.tar
 
 # 将sealer，集群镜像cnstack.tar和配置文件 ClusterFile.yaml传输到没有互联网连接的部署主机，在部署主机执行以下命令
 sealer load -i cnstack.tar
