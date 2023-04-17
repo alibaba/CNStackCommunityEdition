@@ -90,8 +90,11 @@ kubectl -n kubevirt rollout restart deploy ack-virt-api
 如果部署环境没有互联网连接，请执行以下命令下载安装包
 
 ```bash
+# 获取sealer工具
+ARCH=amd64 # or arm64
+wget http://sealerio.oss-cn-shanghai.aliyuncs.com/releases/sealer-v0.9.3-linux-${ARCH}.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
+
 # 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/ack-distro/sealer/sealer-0.9.1-beta1-linux-amd64.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-virt-ce:v2-1-0-ce-2
 wget https://ack-a-utils.oss-cn-beijing.aliyuncs.com/cnstack-virt-ce/2.1-ce/cnstack-virt.clusterfile.yaml -O cnstack-virt.clusterFile.yaml
 
