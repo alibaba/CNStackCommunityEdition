@@ -1,0 +1,136 @@
+apiVersion: sealer.cloud/v2
+kind: Cluster
+metadata:
+  name: my-cluster
+spec:
+  env: []
+  image: cloud-image-registry.cn-shanghai.cr.aliyuncs.com/applications/1410427316774708:vcns-oss-2.1.0-rc002-932c32e-6b3f83
+  registry:
+    localRegistry:
+      cert: {}
+      domain: registry-internal.adp.aliyuncs.com
+      port: 5000
+  ssh: {}
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: vcns-oss-2.1.0-rc002-app-model
+spec:
+  data: |
+    kind: Application
+    apiVersion: app-operator.aliyun.com/v1
+    metadata:
+      name: vcns-oss
+      namespace: vcns-oss
+      labels: {}
+      annotations:
+        adp.aliyuncs.com/app-display-name: vCNS-OSS
+        adp.aliyuncs.com/application-provider: "1138438516518589"
+        adp.aliyuncs.com/application-vendor: Alibaba Cloud
+        adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+    spec:
+      name: vcns-oss
+      version: 2.1.0-rc002
+      description: vCNS-OSS是一款兼容亚马逊的S3协议，对Kubernetes能够友好的支持，专为AI等云原生工作负载而设计的分布式对象存储软件。
+      versionDescription: New Version！
+      infrastructure:
+        foundationReference:
+          version: 2.1.0
+          clusterImage: cloud-image-registry.cn-shanghai.cr.aliyuncs.com/foundations/adp-base:adp-2.1.0-1d3b251-38b79b
+        platform:
+          code: trident
+          version: ""
+          kubeVersion: ""
+          pkgURL: ""
+        resources: []
+      components:
+      - name: vcns-oss
+        resourceVersion: 8.0.22
+        type: vcns-oss
+        version: master
+        versionDescription: High Performance, Kubernetes Native Object Storage
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1138438516518589/vcns-oss/e3a29728131a538f25e6b28b6e790202/vcns-oss-8.0.22.tgz
+            values: RGVwbG95bWVudFVwZGF0ZToKICAgIG1heFN1cmdlOiAxMDAlCiAgICBtYXhVbmF2YWlsYWJsZTogMAogICAgdHlwZTogUm9sbGluZ1VwZGF0ZQpTdGF0ZWZ1bFNldFVwZGF0ZToKICAgIHVwZGF0ZVN0cmF0ZWd5OiBSb2xsaW5nVXBkYXRlCmFjY2Vzc0tleTogYWRtaW4KYWRkaXRpb25hbEFubm90YXRpb25zOiBbXQphZGRpdGlvbmFsTGFiZWxzOiBbXQphZmZpbml0eToKICAgIHBvZEFudGlBZmZpbml0eToKICAgICAgICBwcmVmZXJyZWREdXJpbmdTY2hlZHVsaW5nSWdub3JlZER1cmluZ0V4ZWN1dGlvbjoKICAgICAgICAgICAgLSBwb2RBZmZpbml0eVRlcm06CiAgICAgICAgICAgICAgICBsYWJlbFNlbGVjdG9yOgogICAgICAgICAgICAgICAgICAgIG1hdGNoRXhwcmVzc2lvbnM6CiAgICAgICAgICAgICAgICAgICAgICAgIC0ga2V5OiBhcHAKICAgICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRvcjogSW4KICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZXM6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIHZjbnMtb3NzCiAgICAgICAgICAgICAgICB0b3BvbG9neUtleToga3ViZXJuZXRlcy5pby9ob3N0bmFtZQogICAgICAgICAgICAgIHdlaWdodDogMTAwCmF6dXJlZ2F0ZXdheToKICAgIGVuYWJsZWQ6IGZhbHNlCiAgICByZXBsaWNhczogNApidWNrZXRSb290OiAiIgpidWNrZXRzOiBbXQpjZXJ0c1BhdGg6IC9ldGMvbWluaW8vY2VydHMvCmNsdXN0ZXJEb21haW46IGNsdXN0ZXIubG9jYWwKY29uZmlnUGF0aG1jOiAvZXRjL21pbmlvL21jLwpkZWZhdWx0QnVja2V0OgogICAgZW5hYmxlZDogZmFsc2UKICAgIG5hbWU6IGJ1Y2tldAogICAgcG9saWN5OiBub25lCiAgICBwdXJnZTogZmFsc2UKZHJpdmVzUGVyTm9kZTogMgplbnZpcm9ubWVudDoKICAgIE1JTklPX0JST1dTRVI6ICJvZmYiCiAgICBNSU5JT19QUk9NRVRIRVVTX0FVVEhfVFlQRTogcHVibGljCmV0Y2Q6CiAgICBjbGllbnRDZXJ0OiAiIgogICAgY2xpZW50Q2VydEtleTogIiIKICAgIGNvcmVkbnNQYXRoUHJlZml4OiAiIgogICAgZW5kcG9pbnRzOiBbXQogICAgcGF0aFByZWZpeDogIiIKZXhpc3RpbmdTZWNyZXQ6ICIiCmV4dHJhQXJnczogW10KZnVsbG5hbWVPdmVycmlkZTogdmNucy1vc3MKZ2NzZ2F0ZXdheToKICAgIGVuYWJsZWQ6IGZhbHNlCiAgICBnY3NLZXlKc29uOiAiIgogICAgcHJvamVjdElkOiAiIgogICAgcmVwbGljYXM6IDQKZ2xvYmFsOgogICAgbm9kZVNlbGVjdG9yOgogICAgICAgIG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmE6ICIiCiAgICB0b2xlcmF0aW9uczoKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgICAgIG9wZXJhdG9yOiBFeGlzdHMKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhCiAgICAgICAgICBvcGVyYXRvcjogRXhpc3RzCmhlbG1LdWJlY3RsSnFJbWFnZToKICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAogICAgcmVwb3NpdG9yeTogdmNucy1yZWdpc3RyeS5jbi1oYW5nemhvdS5jci5hbGl5dW5jcy5jb20vdmNucy9oZWxtLWt1YmVjdGwtanEKICAgIHRhZzogMy4xLjAKaW1hZ2U6CiAgICBwdWxsUG9saWN5OiBJZk5vdFByZXNlbnQKICAgIHJlcG9zaXRvcnk6IHZjbnMtcmVnaXN0cnkuY24taGFuZ3pob3UuY3IuYWxpeXVuY3MuY29tL3ZjbnMvb3NzCiAgICB0YWc6IHYxLjAKaW1hZ2VQdWxsU2VjcmV0czogW10KaW5ncmVzczoKICAgIGFubm90YXRpb25zOiB7fQogICAgZW5hYmxlZDogZmFsc2UKICAgIGhvc3RzOgogICAgICAgIC0gY2hhcnQtZXhhbXBsZS5sb2NhbAogICAgbGFiZWxzOiB7fQogICAgcGF0aDogLwogICAgdGxzOiBbXQppbml0aWFsaXplcjoKICAgIGt1YmVjdGw6CiAgICAgICAgaW1hZ2U6CiAgICAgICAgICAgIHJlcG9zaXRvcnk6IHZjbnMtcmVnaXN0cnkuY24taGFuZ3pob3UuY3IuYWxpeXVuY3MuY29tL3ZjbnMva3ViZWN0bAogICAgICAgICAgICB0YWc6IHYxLjIyCm1ha2VCdWNrZXRKb2I6CiAgICBhbm5vdGF0aW9uczogbnVsbAogICAgcG9kQW5ub3RhdGlvbnM6IG51bGwKICAgIHJlc291cmNlczoKICAgICAgICByZXF1ZXN0czoKICAgICAgICAgICAgbWVtb3J5OiAxMjhNaQogICAgc2VjdXJpdHlDb250ZXh0OgogICAgICAgIGVuYWJsZWQ6IGZhbHNlCiAgICAgICAgZnNHcm91cDogMTAwMAogICAgICAgIHJ1bkFzR3JvdXA6IDEwMDAKICAgICAgICBydW5Bc1VzZXI6IDEwMDAKbWNJbWFnZToKICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAogICAgcmVwb3NpdG9yeTogdmNucy1yZWdpc3RyeS5jbi1oYW5nemhvdS5jci5hbGl5dW5jcy5jb20vdmNucy9tYwogICAgdGFnOiBSRUxFQVNFLjIwMjEtMDItMTRUMDQtMjgtMDZaCm1ldHJpY3M6CiAgICBzZXJ2aWNlTW9uaXRvcjoKICAgICAgICBhZGRpdGlvbmFsTGFiZWxzOiB7fQogICAgICAgIGVuYWJsZWQ6IHRydWUKICAgICAgICByZWxhYmVsQ29uZmlnczoge30KbW9kZTogZGlzdHJpYnV0ZWQKbW91bnRQYXRoOiAvZXhwb3J0Cm5hbWVPdmVycmlkZTogIiIKbmFzZ2F0ZXdheToKICAgIGVuYWJsZWQ6IGZhbHNlCiAgICBwdjogbnVsbAogICAgcmVwbGljYXM6IDQKbmV0d29ya1BvbGljeToKICAgIGFsbG93RXh0ZXJuYWw6IHRydWUKICAgIGVuYWJsZWQ6IGZhbHNlCm5vZGVTZWxlY3RvcjoKICAgIG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmE6ICIiCnBlcnNpc3RlbmNlOgogICAgVm9sdW1lTmFtZTogIiIKICAgIGFjY2Vzc01vZGU6IFJlYWRXcml0ZU9uY2UKICAgIGVuYWJsZWQ6IHRydWUKICAgIGV4aXN0aW5nQ2xhaW06ICIiCiAgICBzaXplOiA0MDBHaQogICAgc3RvcmFnZUNsYXNzOiAiIgogICAgc3ViUGF0aDogIiIKcG9kQW5ub3RhdGlvbnM6IHt9CnBvZERpc3J1cHRpb25CdWRnZXQ6CiAgICBlbmFibGVkOiBmYWxzZQogICAgbWF4VW5hdmFpbGFibGU6IDEKcG9kTGFiZWxzOiB7fQpwcmlvcml0eUNsYXNzTmFtZTogIiIKcmVwbGljYXM6IDYKcmVzb3VyY2VzOgogICAgbGltaXRzOgogICAgICAgIGNwdTogIjEiCiAgICAgICAgbWVtb3J5OiA0R2kKICAgIHJlcXVlc3RzOgogICAgICAgIGNwdTogNTBtCiAgICAgICAgbWVtb3J5OiAyNTZNaQpzM2dhdGV3YXk6CiAgICBhY2Nlc3NLZXk6ICIiCiAgICBlbmFibGVkOiBmYWxzZQogICAgcmVwbGljYXM6IDQKICAgIHNlY3JldEtleTogIiIKICAgIHNlcnZpY2VFbmRwb2ludDogIiIKc2VjcmV0S2V5OiBhZG1pbjEyMzQ1NgpzZWN1cml0eUNvbnRleHQ6CiAgICBlbmFibGVkOiB0cnVlCiAgICBmc0dyb3VwOiAxMDAwCiAgICBydW5Bc0dyb3VwOiAxMDAwCiAgICBydW5Bc1VzZXI6IDEwMDAKc2VydmljZToKICAgIGFubm90YXRpb25zOiB7fQogICAgY2x1c3RlcklQOiBudWxsCiAgICBleHRlcm5hbElQczogW10KICAgIG5vZGVQb3J0OiAzMjAxMAogICAgcG9ydDogOTAwMAogICAgdHlwZTogTm9kZVBvcnQKc2VydmljZUFjY291bnQ6CiAgICBjcmVhdGU6IHRydWUKICAgIG5hbWU6IG51bGwKdGxzOgogICAgY2VydFNlY3JldDogIiIKICAgIGVuYWJsZWQ6IGZhbHNlCiAgICBwcml2YXRlS2V5OiBwcml2YXRlLmtleQogICAgcHVibGljQ3J0OiBwdWJsaWMuY3J0CnRvbGVyYXRpb25zOgogICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgb3BlcmF0b3I6IEV4aXN0cwogICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhCiAgICAgIG9wZXJhdG9yOiBFeGlzdHMKdHJ1c3RlZENlcnRzU2VjcmV0OiAiIgp1cGRhdGVQcm9tZXRoZXVzSm9iOgogICAgYW5ub3RhdGlvbnM6IG51bGwKICAgIHBvZEFubm90YXRpb25zOiBudWxsCiAgICBzZWN1cml0eUNvbnRleHQ6CiAgICAgICAgZW5hYmxlZDogZmFsc2UKICAgICAgICBmc0dyb3VwOiAxMDAwCiAgICAgICAgcnVuQXNHcm91cDogMTAwMAogICAgICAgIHJ1bkFzVXNlcjogMTAwMAp6b25lczogMQo=
+            timeout: 600
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+  path: applications/vcns-oss-2.1.0-rc002.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: vcns-oss-2.1.0-rc002-namespace
+spec:
+  data: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      creationTimestamp: null
+      labels:
+        adp.aliyuncs.com/managed-namespace: "true"
+      name: vcns-oss
+    spec: {}
+    status: {}
+  path: applications/vcns-oss-2.1.0-rc002-namespace.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: vcns-oss-2.1.0-rc002-configuration
+spec:
+  data: |
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      creationTimestamp: null
+      labels:
+        adp.aliyuncs.com/application-configuration: "true"
+        adp.aliyuncs.com/application-name: vcns-oss
+      name: vcns-oss-configuration
+      namespace: vcns-oss
+    stringData:
+      components: |
+        vcns-oss:
+          accessKey: admin
+          drivesPerNode: 1
+          metrics:
+            serviceMonitor:
+              enabled: true
+          mode: standalone
+          persistence:
+            size: 50Gi
+            storageClass: null
+          secretKey: Cnstack%MinIO
+          service:
+            type: ClusterIP
+    type: Opaque
+  path: applications/vcns-oss-2.1.0-rc002-configuration.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  name: vcns-oss-2.1.0-rc002-image-mapping
+spec:
+  data: |
+    metadata:
+      creationTimestamp: null
+      namespace: vcns-oss
+  path: applications/vcns-oss-2.1.0-rc002-image-mapping.yaml
+  process: value
+  strategy: merge
+status: {}

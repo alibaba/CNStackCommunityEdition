@@ -188,6 +188,7 @@ vgremove open-local-pool-0 --force
 ## 快速开始
 
 * 访问[创建第一个Application](./doc/first-app.md)，了解如何配置平台，配额，完成第一个应用的创建
+* 访问[部署CNStack虚拟化社区版](./doc/cnstack-virt.md)，了解如何增量部署CNStack虚拟化社区版
 
 ## 使用手册
 

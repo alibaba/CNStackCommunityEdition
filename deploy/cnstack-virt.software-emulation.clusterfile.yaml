@@ -1,0 +1,286 @@
+apiVersion: sealer.cloud/v2
+kind: Cluster
+metadata:
+  creationTimestamp: "2023-04-11T08:31:55Z"
+  name: my-cluster
+spec:
+  env: []
+  image: ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-virt-ce:v2-1-0-ce-2
+  registry:
+    localRegistry:
+      cert: {}
+      domain: registry-internal.adp.aliyuncs.com
+      port: 5000
+  ssh: {}
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  creationTimestamp: "2023-04-11T08:31:55Z"
+  name: cnstack-virtualization-2.1.0-ce-2-app-model
+spec:
+  data: |
+    kind: Application
+    apiVersion: app-operator.aliyun.com/v1
+    metadata:
+      name: cnstack-virtualization
+      namespace: cnstack-virtualization
+      labels: {}
+      annotations:
+        adp.aliyuncs.com/app-display-name: 虚拟化服务
+        adp.aliyuncs.com/app-spec-name: poc
+        adp.aliyuncs.com/application-provider: "1410427316774708"
+        adp.aliyuncs.com/application-vendor: Alibaba Cloud
+        adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+    spec:
+      name: cnstack-virtualization
+      version: 2.1.0-ce-2
+      description: 针对存量业务无法容器化的场景，提供基于 Kubernetes+KVM 的虚拟机供给能力。
+      versionDescription: 2.1 社区版
+      infrastructure:
+        foundationReference:
+          version: 2.1.0
+          clusterImage: cloud-image-registry.cn-shanghai.cr.aliyuncs.com/foundations/adp-base:adp-2.1.0-1d3b251-38b79b
+        platform:
+          code: trident
+          version: ""
+          kubeVersion: ""
+          pkgURL: ""
+        resources: []
+      components:
+      - name: containerized-data-importer
+        resourceVersion: 1.50.0-0.2.5
+        type: containerized-data-importer
+        version: 1.50.0-0.2.5
+        versionDescription: Provide a declarative way to build Virtual Machine Disks for
+          Kubevirt.
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/containerized-data-importer/385b3de2b7cc45124f10ff93cfc8aa58/containerized-data-importer-1.50.0-0.2.5.tgz
+            values: Z2xvYmFsOgogICAgcmVnaXN0cnlVUkw6IGFjay1hZ2lsaXR5LXJlZ2lzdHJ5LmNuLXNoYW5naGFpLmNyLmFsaXl1bmNzLmNvbQppbWFnZToKICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAogICAgcmVwb3NpdG9yeTogZWNwX2J1aWxkZXIKICAgIHRhZzogdjEuNTAuMC0wLjIuMS1lMTM4NTc4ZQppbmZyYU5vZGVQbGFjZW1lbnQ6CiAgICBhZmZpbml0eToge30KICAgIG5vZGVTZWxlY3RvcjoKICAgICAgICBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhOiAiIgogICAgdG9sZXJhdGlvbnM6CiAgICAgICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAgICAgIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vbWFzdGVyCiAgICAgICAgICBvcGVyYXRvcjogRXhpc3RzCiAgICAgICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAgICAgIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vY25zdGFjay1pbmZyYQogICAgICAgICAgb3BlcmF0b3I6IEV4aXN0cwp3b3JrbG9hZE5vZGVQbGFjZW1lbnQ6CiAgICBhZmZpbml0eToge30KICAgIG5vZGVTZWxlY3RvcjoKICAgICAgICBhY2thLXZpcnQuYWxpYmFiYWNsb3VkLmNvbS92aXJ0LW9rOiAiIgogICAgdG9sZXJhdGlvbnM6CiAgICAgICAgLSBvcGVyYXRvcjogRXhpc3RzCg==
+            timeout: 600
+        clusterSelector:
+          matchExpressions:
+          - key: name
+            operator: Exists
+            values: []
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: cdi
+      - name: kubevirt
+        resourceVersion: 0.50.0-0.2.23
+        type: kubevirt
+        version: 0.50.0-0.2.23
+        versionDescription: Building a virtualization API for Kubernetes.
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/kubevirt/157387f477d05afd39b3766e3ef22be4/kubevirt-0.50.0-0.2.23.tgz
+            values: YmFja3VwOgogICAga3ViZXZpcnRWZWxlcm9QbHVnaW46CiAgICAgICAgaW1hZ2U6CiAgICAgICAgICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAogICAgICAgICAgICByZXBvc2l0b3J5OiBlY3BfYnVpbGRlcgogICAgICAgICAgICB0YWc6IHYwLjUuMC0xM2JmZmZmLTAzMDcyMjU1CiAgICB2ZWxlcm9QbHVnaW5JbnN0YWxsZXI6CiAgICAgICAgaW1hZ2U6CiAgICAgICAgICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAogICAgICAgICAgICByZXBvc2l0b3J5OiBlY3BfYnVpbGRlcgogICAgICAgICAgICB0YWc6IHYxLjkuMC1yYzAwMQplZGdlVk1Ob2RlUGxhY2VtZW50OgogICAgYWZmaW5pdHk6CiAgICAgICAgbm9kZUFmZmluaXR5OgogICAgICAgICAgICByZXF1aXJlZER1cmluZ1NjaGVkdWxpbmdJZ25vcmVkRHVyaW5nRXhlY3V0aW9uOgogICAgICAgICAgICAgICAgbm9kZVNlbGVjdG9yVGVybXM6CiAgICAgICAgICAgICAgICAgICAgLSBtYXRjaEV4cHJlc3Npb25zOgogICAgICAgICAgICAgICAgICAgICAgICAtIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vbWFzdGVyCiAgICAgICAgICAgICAgICAgICAgICAgICAgb3BlcmF0b3I6IERvZXNOb3RFeGlzdAogICAgICAgICAgICAgICAgICAgICAgICAtIGtleTogYWNrYS12aXJ0LmFsaWJhYmFjbG91ZC5jb20vY2xvdWQtdG8tZWRnZS1uZXR3b3JrLWJsb2NrZWQKICAgICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRvcjogSW4KICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZXM6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtICJ0cnVlIgogICAgbm9kZVNlbGVjdG9yOgogICAgICAgIGFja2EtdmlydC5hbGliYWJhY2xvdWQuY29tL3ZpcnQtb2s6ICIiCiAgICB0b2xlcmF0aW9uczoKICAgICAgICAtIG9wZXJhdG9yOiBFeGlzdHMKZ2xvYmFsOgogICAgcHJvZHVjdE5hbWU6IGNuc3RhY2stdmlydHVhbGl6YXRpb24KICAgIHJlZ2lzdHJ5VVJMOiBhY2stYWdpbGl0eS1yZWdpc3RyeS5jbi1zaGFuZ2hhaS5jci5hbGl5dW5jcy5jb20KaW1hZ2U6CiAgICBwdWxsUG9saWN5OiBJZk5vdFByZXNlbnQKICAgIHJlcG9zaXRvcnk6IGVjcF9idWlsZGVyCiAgICB0YWc6IHYwLjUwLjAtMC4yLjMtODg3OGQ2NAppbmZyYU5vZGVQbGFjZW1lbnQ6CiAgICBhZmZpbml0eToge30KICAgIG5vZGVTZWxlY3RvcjoKICAgICAgICBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhOiAiIgogICAgcmVwbGljYXM6IDIKICAgIHRvbGVyYXRpb25zOgogICAgICAgIC0gZWZmZWN0OiBOb1NjaGVkdWxlCiAgICAgICAgICBrZXk6IG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL21hc3RlcgogICAgICAgICAgb3BlcmF0b3I6IEV4aXN0cwogICAgICAgIC0gZWZmZWN0OiBOb1NjaGVkdWxlCiAgICAgICAgICBrZXk6IG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmEKICAgICAgICAgIG9wZXJhdG9yOiBFeGlzdHMKa3ViZXZpcnRDbHVzdGVyT3B0aW9uczoKICAgIGlwRmFtaWx5OiAiNCIKICAgIHByb3h5VHVubmVsQWRkcmVzczogeC10dW5uZWwtc2VydmVyLWludGVybmFsLXN2Yy5rdWJlLXN5c3RlbS5zdmM6ODE4NgogICAgc29mdHdhcmVFbXVsYXRpb246IGZhbHNlCnByb21ldGhldXM6CiAgICBtb25pdG9yOgogICAgICAgIGVuYWJsZWQ6IHRydWUKc2NhbGU6CiAgICBpbmZyYToKICAgICAgICAtIHJlc291cmNlTmFtZTogdmlydC1hcGkKICAgICAgICAgIHJlc291cmNlVHlwZTogRGVwbG95bWVudAogICAgICAgICAgcmVzb3VyY2VzOgogICAgICAgICAgICBsaW1pdHM6CiAgICAgICAgICAgICAgICBjcHU6IDIwMG0KICAgICAgICAgICAgICAgIG1lbW9yeTogNjAwTWkKICAgICAgICAgICAgcmVxdWVzdHM6CiAgICAgICAgICAgICAgICBjcHU6IDUwbQogICAgICAgICAgICAgICAgbWVtb3J5OiAyMDBNaQogICAgICAgIC0gcmVzb3VyY2VOYW1lOiB2aXJ0LWNvbnRyb2xsZXIKICAgICAgICAgIHJlc291cmNlVHlwZTogRGVwbG95bWVudAogICAgICAgICAgcmVzb3VyY2VzOgogICAgICAgICAgICBsaW1pdHM6CiAgICAgICAgICAgICAgICBjcHU6IDIwMG0KICAgICAgICAgICAgICAgIG1lbW9yeTogNjAwTWkKICAgICAgICAgICAgcmVxdWVzdHM6CiAgICAgICAgICAgICAgICBjcHU6IDUwbQogICAgICAgICAgICAgICAgbWVtb3J5OiAxNTBNaQogICAgICAgIC0gcmVzb3VyY2VOYW1lOiB2aXJ0LWhhbmRsZXIKICAgICAgICAgIHJlc291cmNlVHlwZTogRGFlbW9uc2V0CiAgICAgICAgICByZXNvdXJjZXM6CiAgICAgICAgICAgIGxpbWl0czoKICAgICAgICAgICAgICAgIGNwdTogMjAwbQogICAgICAgICAgICAgICAgbWVtb3J5OiA2MDBNaQogICAgICAgICAgICByZXF1ZXN0czoKICAgICAgICAgICAgICAgIGNwdTogNTBtCiAgICAgICAgICAgICAgICBtZW1vcnk6IDI1ME1pCiAgICAgICAgLSByZXNvdXJjZU5hbWU6IHZpcnQtaGFuZGxlci1lZGdlCiAgICAgICAgICByZXNvdXJjZVR5cGU6IERhZW1vbnNldAogICAgICAgICAgcmVzb3VyY2VzOgogICAgICAgICAgICBsaW1pdHM6CiAgICAgICAgICAgICAgICBjcHU6IDIwMG0KICAgICAgICAgICAgICAgIG1lbW9yeTogNjAwTWkKICAgICAgICAgICAgcmVxdWVzdHM6CiAgICAgICAgICAgICAgICBjcHU6IDUwbQogICAgICAgICAgICAgICAgbWVtb3J5OiAyNTBNaQogICAgb3BlcmF0b3I6CiAgICAgICAgcmVzb3VyY2VzOgogICAgICAgICAgICBsaW1pdHM6CiAgICAgICAgICAgICAgICBjcHU6IDMwMG0KICAgICAgICAgICAgICAgIG1lbW9yeTogNjAwTWkKICAgICAgICAgICAgcmVxdWVzdHM6CiAgICAgICAgICAgICAgICBjcHU6IDEwMG0KICAgICAgICAgICAgICAgIG1lbW9yeTogMzAwTWkKdmlydFByZWZsaWdodE5vZGVQbGFjZW1lbnQ6CiAgICBhZmZpbml0eToKICAgICAgICBub2RlQWZmaW5pdHk6CiAgICAgICAgICAgIHJlcXVpcmVkRHVyaW5nU2NoZWR1bGluZ0lnbm9yZWREdXJpbmdFeGVjdXRpb246CiAgICAgICAgICAgICAgICBub2RlU2VsZWN0b3JUZXJtczoKICAgICAgICAgICAgICAgICAgICAtIG1hdGNoRXhwcmVzc2lvbnM6CiAgICAgICAgICAgICAgICAgICAgICAgIC0ga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRvcjogRG9lc05vdEV4aXN0CiAgICBub2RlU2VsZWN0b3I6IHt9CiAgICB0b2xlcmF0aW9uczoKICAgICAgICAtIG9wZXJhdG9yOiBFeGlzdHMKdm1Ob2RlUGxhY2VtZW50OgogICAgYWZmaW5pdHk6CiAgICAgICAgbm9kZUFmZmluaXR5OgogICAgICAgICAgICByZXF1aXJlZER1cmluZ1NjaGVkdWxpbmdJZ25vcmVkRHVyaW5nRXhlY3V0aW9uOgogICAgICAgICAgICAgICAgbm9kZVNlbGVjdG9yVGVybXM6CiAgICAgICAgICAgICAgICAgICAgLSBtYXRjaEV4cHJlc3Npb25zOgogICAgICAgICAgICAgICAgICAgICAgICAtIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vbWFzdGVyCiAgICAgICAgICAgICAgICAgICAgICAgICAgb3BlcmF0b3I6IERvZXNOb3RFeGlzdAogICAgICAgICAgICAgICAgICAgICAgICAtIGtleTogYWNrYS12aXJ0LmFsaWJhYmFjbG91ZC5jb20vY2xvdWQtdG8tZWRnZS1uZXR3b3JrLWJsb2NrZWQKICAgICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRvcjogSW4KICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZXM6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtICJmYWxzZSIKICAgICAgICAgICAgICAgICAgICAtIG1hdGNoRXhwcmVzc2lvbnM6CiAgICAgICAgICAgICAgICAgICAgICAgIC0ga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRvcjogRG9lc05vdEV4aXN0CiAgICAgICAgICAgICAgICAgICAgICAgIC0ga2V5OiBhY2thLXZpcnQuYWxpYmFiYWNsb3VkLmNvbS9jbG91ZC10by1lZGdlLW5ldHdvcmstYmxvY2tlZAogICAgICAgICAgICAgICAgICAgICAgICAgIG9wZXJhdG9yOiBEb2VzTm90RXhpc3QKICAgIG5vZGVTZWxlY3RvcjoKICAgICAgICBhY2thLXZpcnQuYWxpYmFiYWNsb3VkLmNvbS92aXJ0LW9rOiAiIgogICAgdG9sZXJhdGlvbnM6CiAgICAgICAgLSBvcGVyYXRvcjogRXhpc3RzCg==
+            timeout: 600
+        clusterSelector:
+          matchExpressions:
+          - key: name
+            operator: Exists
+            values: []
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: kubevirt
+      - name: vmimage-controller
+        resourceVersion: 0.2.16
+        type: vmimage-controller
+        version: 0.2.16
+        versionDescription: Operator for VirtualMachine Image
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/vmimage-controller/75354125ab3414d3fcd9593307c82dcc/vmimage-controller-0.2.16.tgz
+            values: Y29udHJvbGxlck9wdGlvbnM6CiAgICBwcm9jZXNzb3JDaGVja0FnaW5nVGltZW91dDogNDhoCmdsb2JhbDoKICAgIGNsdXN0ZXJOYW1lOiAiIgogICAgcHJvZHVjdE5hbWU6IGNuc3RhY2stdmlydHVhbGl6YXRpb24KICAgIHJlZ2lzdHJ5VVJMOiBhY2stYWdpbGl0eS1yZWdpc3RyeS5jbi1zaGFuZ2hhaS5jci5hbGl5dW5jcy5jb20KaW1hZ2U6CiAgICBwdWxsUG9saWN5OiBJZk5vdFByZXNlbnQKICAgIHJlcG9zaXRvcnk6IGVjcF9idWlsZGVyCiAgICB0YWc6IHYwLjIuMS0yZjllZWQ5LTA0MTAyMTM0CmluZnJhTm9kZVBsYWNlbWVudDoKICAgIGFmZmluaXR5OiB7fQogICAgbm9kZVNlbGVjdG9yOgogICAgICAgIG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmE6ICIiCiAgICByZXBsaWNhczogMQogICAgdG9sZXJhdGlvbnM6CiAgICAgICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAgICAgIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vbWFzdGVyCiAgICAgICAgICBvcGVyYXRvcjogRXhpc3RzCiAgICAgICAgLSBlZmZlY3Q6IE5vU2NoZWR1bGUKICAgICAgICAgIGtleTogbm9kZS1yb2xlLmt1YmVybmV0ZXMuaW8vY25zdGFjay1pbmZyYQogICAgICAgICAgb3BlcmF0b3I6IEV4aXN0cwpwcmVzZXRWTUltYWdlOgogICAgZW5hYmxlOiB0cnVlCiAgICByZWdpc3RyeToKICAgICAgICBwYXNzd29yZDogIiIKICAgICAgICB1c2VyOiAiIgpwcm9tZXRoZXVzOgogICAgbW9uaXRvcjoKICAgICAgICBlbmFibGVkOiB0cnVlCnJlc291cmNlczoKICAgIGxpbWl0czoKICAgICAgICBjcHU6IDUwMG0KICAgICAgICBtZW1vcnk6IDUwME1pCiAgICByZXF1ZXN0czoKICAgICAgICBjcHU6IDEwMG0KICAgICAgICBtZW1vcnk6IDIwME1pCg==
+            timeout: 600
+        clusterSelector:
+          matchExpressions:
+          - key: name
+            operator: Exists
+            values: []
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: kubevirt
+      - name: ack-virt-api
+        resourceVersion: 0.2.32
+        type: ack-virt-api
+        version: 0.2.32
+        versionDescription: Management API for VirtualMachine
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/ack-virt-api/9dc7d358a2083fbceb64548336f40afc/ack-virt-api-0.2.32.tgz
+            values: Y25zdGFja0ludGVncmF0aW9uOgogICAgY25zdGFja01pbmlvOgogICAgICAgIGFjY2Vzc0tleUlEOiBmb28KICAgICAgICBidWNrZXQ6IGFja2EtdmlydC12bWltYWdlcwogICAgICAgIGRpc2FibGVTU0w6IHRydWUKICAgICAgICBlbmRwb2ludDogbWluaW8tZXh0ZXJuYWwtc2VydmljZS5hY3MtbWluaW8uc3ZjOjkwMDAKICAgICAgICBmb3JjZVBhdGhTdHlsZTogdHJ1ZQogICAgICAgIHJlZ2lvbjogYWNrYQogICAgICAgIHNlY3JldEFjY2Vzc0tleTogYmFyCiAgICBleHRlcm5hbFMzOgogICAgICAgIGFjY2Vzc0tleUlEOiBmb28KICAgICAgICBidWNrZXQ6IGFja2EtdmlydC12bWltYWdlcwogICAgICAgIGRpc2FibGVTU0w6IHRydWUKICAgICAgICBlbmRwb2ludDogcGxheS5taW4uaW8KICAgICAgICBmb3JjZVBhdGhTdHlsZTogdHJ1ZQogICAgICAgIHJlZ2lvbjogYWNrYQogICAgICAgIHNlY3JldEFjY2Vzc0tleTogYmFyCiAgICBvc3NQcm92aWRlcjogY25zdGFjay1taW5pbwogICAgdmNuc01pbmlvOgogICAgICAgIGFjY2Vzc0tleUlEOiBhZG1pbgogICAgICAgIGJ1Y2tldDogYWNrYS12aXJ0LXZtaW1hZ2VzCiAgICAgICAgZGlzYWJsZVNTTDogdHJ1ZQogICAgICAgIGVuZHBvaW50OiB2Y25zLW9zcy5rdWJlLXB1YmxpYy5zdmMKICAgICAgICBmb3JjZVBhdGhTdHlsZTogdHJ1ZQogICAgICAgIHJlZ2lvbjogYWNrYQogICAgICAgIHNlY3JldEFjY2Vzc0tleTogQ25zdGFjayVNaW5JTwplMmV0ZXN0OgogICAgZW5hYmxlZDogZmFsc2UKZ2xvYmFsOgogICAgcHJvZHVjdE5hbWU6IGNuc3RhY2stdmlydHVhbGl6YXRpb24KICAgIHJlZ2lzdHJ5VVJMOiBhY2stYWdpbGl0eS1yZWdpc3RyeS5jbi1zaGFuZ2hhaS5jci5hbGl5dW5jcy5jb20KaW1hZ2U6CiAgICBwdWxsUG9saWN5OiBJZk5vdFByZXNlbnQKICAgIHJlcG9zaXRvcnk6IGVjcF9idWlsZGVyCiAgICB0YWc6IHYwLjIuMS0xMDI1YWFhLTA0MTAxODUyCmluZnJhTm9kZVBsYWNlbWVudDoKICAgIGFmZmluaXR5OiB7fQogICAgbm9kZVNlbGVjdG9yOgogICAgICAgIG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmE6ICIiCiAgICByZXBsaWNhczogMgogICAgcmVzb3VyY2VzOgogICAgICAgIGxpbWl0czoKICAgICAgICAgICAgY3B1OiA4MDBtCiAgICAgICAgICAgIG1lbW9yeTogMTAwME1pCiAgICAgICAgcmVxdWVzdHM6CiAgICAgICAgICAgIGNwdTogNDAwbQogICAgICAgICAgICBtZW1vcnk6IDUwME1pCiAgICB0b2xlcmF0aW9uczoKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgICAgIG9wZXJhdG9yOiBFeGlzdHMKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhCiAgICAgICAgICBvcGVyYXRvcjogRXhpc3RzCnByb21ldGhldXM6CiAgICBtb25pdG9yOgogICAgICAgIGVuYWJsZWQ6IHRydWUKcmJhYzoKICAgIHNlcnZpY2VBY2NvdW50TmFtZTogYWNrLXZpcnQtYXBpCnNlcnZlck9wdGlvbnM6CiAgICBsaXN0ZW5Qb3J0OiA4MDgwCnNlcnZpY2U6CiAgICB0eXBlOiBDbHVzdGVySVAKdm1QcmVzZXQ6CiAgICByZXNlcnZlZE1lbW9yeTogMTAwTWkK
+            timeout: 600
+        clusterSelector: {}
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: kubevirt
+      - name: acka-virt-cnstack-ui
+        resourceVersion: 0.2.16
+        type: acka-virt-cnstack-ui
+        version: 0.2.16
+        versionDescription: acka@virt frontend artifacts for CNStack v2.0
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/acka-virt-cnstack-ui/080181fda91c462261306fd63d854002/acka-virt-cnstack-ui-0.2.16.tgz
+            values: Z2xvYmFsOgogICAgcHJvZHVjdE5hbWU6IGNuc3RhY2stdmlydHVhbGl6YXRpb24KICAgIHJlZ2lzdHJ5VVJMOiBhY2stYWdpbGl0eS1yZWdpc3RyeS5jbi1zaGFuZ2hhaS5jci5hbGl5dW5jcy5jb20KaW1hZ2U6CiAgICBwdWxsUG9saWN5OiBJZk5vdFByZXNlbnQKICAgIHJlcG9zaXRvcnk6IGVjcF9idWlsZGVyCiAgICB0YWc6IHYyLjEuMC1jODUzNGZlLTAzMDkxOTQ4CmluZnJhTm9kZVBsYWNlbWVudDoKICAgIGFmZmluaXR5OiB7fQogICAgbm9kZVNlbGVjdG9yOgogICAgICAgIG5vZGUtcm9sZS5rdWJlcm5ldGVzLmlvL2Nuc3RhY2staW5mcmE6ICIiCiAgICB0b2xlcmF0aW9uczoKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9tYXN0ZXIKICAgICAgICAgIG9wZXJhdG9yOiBFeGlzdHMKICAgICAgICAtIGVmZmVjdDogTm9TY2hlZHVsZQogICAgICAgICAga2V5OiBub2RlLXJvbGUua3ViZXJuZXRlcy5pby9jbnN0YWNrLWluZnJhCiAgICAgICAgICBvcGVyYXRvcjogRXhpc3RzCnVwbG9hZEFydGlmYWN0czoKICAgIGVuYWJsZWQ6IGZhbHNlCg==
+            timeout: 600
+        clusterSelector: {}
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: acs-system
+      - name: acka-virt-manifests
+        resourceVersion: 0.2.6
+        type: acka-virt-manifests
+        version: 0.2.6
+        versionDescription: acka-virt manifests on CNStack v2.0
+        workload:
+          helm:
+            createNamespace: true
+            chartFile: ""
+            url: oss://cn-shanghai-cnx-distribution/1410427316774708/acka-virt-manifests/deff702e728b1f1b305590091907f89b/acka-virt-manifests-0.2.6.tgz
+            values: Z2xvYmFsOgogICAgcHJvZHVjdE5hbWU6IGNuc3RhY2stdmlydHVhbGl6YXRpb24K
+            timeout: 600
+        clusterSelector:
+          matchExpressions:
+          - key: name
+            operator: Exists
+            values: []
+        annotations:
+          adp.aliyuncs.com/supported-platforms: '["linux/amd64","linux/arm64"]'
+          namespace: kubevirt
+  path: applications/cnstack-virtualization-2.1.0-ce-2.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  creationTimestamp: "2023-04-11T08:31:55Z"
+  name: cnstack-virtualization-2.1.0-ce-2-namespace
+spec:
+  data: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      creationTimestamp: null
+      labels:
+        adp.aliyuncs.com/managed-namespace: "true"
+      name: cnstack-virtualization
+    spec: {}
+    status: {}
+  path: applications/cnstack-virtualization-2.1.0-ce-2-namespace.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  creationTimestamp: "2023-04-11T08:31:55Z"
+  name: cnstack-virtualization-2.1.0-ce-2-configuration
+spec:
+  data: |
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      creationTimestamp: null
+      labels:
+        adp.aliyuncs.com/application-configuration: "true"
+        adp.aliyuncs.com/application-name: cnstack-virtualization
+      name: cnstack-virtualization-configuration
+      namespace: cnstack-virtualization
+    stringData:
+      components: |
+        ack-virt-api:
+          cnstackIntegration:
+            ossProvider: vcns-minio
+          e2etest:
+            enabled: false
+          infraNodePlacement:
+            replicas: 1
+          vmPreset:
+            reservedMemory: 700Mi
+        kubevirt:
+          edgeVMNodePlacement:
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: acka-virt.alibabacloud.com/cloud-to-edge-network-blocked
+                      operator: In
+                      values:
+                      - "true"
+          infraNodePlacement:
+            replicas: 1
+          kubevirtClusterOptions:
+            softwareEmulation: true
+          virtPreflightNodePlacement:
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: kubernetes.io/os
+                      operator: In
+                      values:
+                      - linux
+          vmNodePlacement:
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: acka-virt.alibabacloud.com/cloud-to-edge-network-blocked
+                      operator: In
+                      values:
+                      - "false"
+                  - matchExpressions:
+                    - key: acka-virt.alibabacloud.com/cloud-to-edge-network-blocked
+                      operator: DoesNotExist
+        vmimage-controller:
+          infraNodePlacement:
+            replicas: 1
+          presetVMImage:
+            enable: true
+      global: |
+        global:
+          productName: cnstack-virtualization
+        prometheus:
+          monitor:
+            enabled: "true"
+    type: Opaque
+  path: applications/cnstack-virtualization-2.1.0-ce-2-configuration.yaml
+  process: value
+  strategy: overwrite
+status: {}
+---
+apiVersion: sealer.aliyun.com/v1alpha1
+kind: Config
+metadata:
+  creationTimestamp: "2023-04-11T08:31:55Z"
+  name: cnstack-virtualization-2.1.0-ce-2-image-mapping
+spec:
+  data: |
+    metadata:
+      creationTimestamp: null
+      namespace: cnstack-virtualization
+  path: applications/cnstack-virtualization-2.1.0-ce-2-image-mapping.yaml
+  process: value
+  strategy: merge
+status: {}
