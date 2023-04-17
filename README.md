@@ -42,7 +42,7 @@ ARCH=amd64 # or arm64
 wget http://sealerio.oss-cn-shanghai.aliyuncs.com/releases/sealer-v0.9.3-linux-${ARCH}.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
 # 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）
 sealer run -f ClusterFile.yaml -m 192.168.0.1 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
@@ -56,7 +56,7 @@ ARCH=amd64 # or arm64
 wget http://sealerio.oss-cn-shanghai.aliyuncs.com/releases/sealer-v0.9.3-linux-${ARCH}.tar.gz -O sealer.tar.gz && tar -xvf sealer.tar.gz -C /usr/bin
 
 # 获取配置文件
-wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-3-clusterfile.yaml -O ClusterFile.yaml
+wget http://ack-a-aecp.oss-cn-hangzhou.aliyuncs.com/cnstack-ce/clusterfile/cnstack-ce-v2-1-0-ce-4-clusterfile.yaml -O ClusterFile.yaml
 
 # 示例IP：192.168.0.1（master内部IP）136.67.0.1（master外部IP）192.168.0.2（worker1）192.168.0.3（worker2）192.168.0.4（worker3）
 sealer run -f ClusterFile.yaml -m 192.168.0.1 -n 192.168.0.2,192.168.0.3,192.168.0.4 -p $passwd -e gatewayExternalIP=136.67.0.1 -e ingressExternalIP=136.67.0.1
@@ -207,10 +207,10 @@ vgremove open-local-pool-0 --force
 
 ```bash
 # 在有互联网连接的主机，使用sealer pull拉取集群镜像和配置文件
-sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-3
+sealer pull ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-4
 
 # 保存集群镜像为tar文件
-sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-3 -o cnstack.tar
+sealer save ack-agility-registry.cn-shanghai.cr.aliyuncs.com/ecp_builder/cnstack-ce:v2-1-0-ce-4 -o cnstack.tar
 
 # 将sealer，集群镜像cnstack.tar和配置文件 ClusterFile.yaml传输到没有互联网连接的部署主机，在部署主机执行以下命令
 sealer load -i cnstack.tar
