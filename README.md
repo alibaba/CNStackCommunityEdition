@@ -174,6 +174,30 @@ kubectl get app -A
 # 等待所有App的状态为Running
 ```
 
+#### 节点角色规划说明
+
+CNStack集群中包含以下几种角色（role），每个节点扮演其中一至多种角色：
+
+- master，用于部署k8s核心组件
+  - 标签，node-role.kubernetes.io/master: ""
+  - 污点，node-role.kubernetes.io/master:NoSchedule
+- cnstack-infra，用于部署云服务组件
+  - 标签，node-role.kubernetes.io/cnstack-infra: ""
+  - 污点，无
+- proxy，用于部署对外组件，如Ingress、Iam-Gateway，这部分节点需要能够对客户侧客户端（例如访问平台使用的浏览器、访问服务的业务组件）放开
+  - 标签，node-role.kubernetes.io/proxy: ""
+  - 污点，无
+- node，用于部署用户负载，无污点
+  - 标签，node-role.kubernetes.io/node: ""
+  - 污点，无。
+
+master/node的使用方式和社区版K8s一致，使用"sealer run/join -m"添加的就是master，"-n"就是node，或者在ClusterFile中的roles中指定了master/node的角色，指定为master的节点会被作为K8s管控节点添加，注意，CNStack社区版中只允许单Master。
+> 通过"-e RemoveMasterTaint=true"可以在部署时自动去除Master的污点，也可以后续手动去除污点。
+
+CNStack社区版默认会为所有节点打上cnstack-infra和proxy的role，并且不带污点。
+
+#### 更多
+
 如想了解更多的配置参数，请参考 [ACK Distro进阶配置方式](https://github.com/AliyunContainerService/ackdistro/blob/main/docs/user-guide/getting-started_zh.md#%E8%BF%9B%E9%98%B6%E4%BD%BF%E7%94%A8%E7%94%9F%E4%BA%A7%E7%BA%A7%E5%88%AB%E7%9A%84%E9%85%8D%E7%BD%AE%E5%88%9B%E5%BB%BAdistro%E9%9B%86%E7%BE%A4)
 
 ## 产品卸载
