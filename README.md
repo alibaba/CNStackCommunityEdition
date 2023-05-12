@@ -217,7 +217,7 @@ vgremove open-local-pool-0 --force
 ## 使用手册
 
 * 访问[阿里云-云原生CNStack](https://www.aliyun.com/activity/middleware/cnstack)，获取CNStack更多产品信息。
-* 访问[线用户文档](https://help.aliyun.com/apsara/agile-cnstack/v_2_0_0_20230310/cnstack/user-guide/)
+* 访问[在线用户文档](https://help.aliyun.com/apsara/agile-cnstack/v_2_1_0_20230413/cnstack/user-guide/product-introduction.html)
 
 ## 依赖组件介绍
 
